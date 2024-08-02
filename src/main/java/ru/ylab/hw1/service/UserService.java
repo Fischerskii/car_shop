@@ -1,30 +1,31 @@
 package ru.ylab.hw1.service;
 
-import ru.ylab.hw1.dto.Customer;
+import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.enums.Role;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerService {
-    Map<String, Customer> customers = new HashMap<>();
+public class UserService {
+    Map<String, User> users = new HashMap<>();
 
 
-    public boolean registerCustomer(String customerName, String password) {
-        if (customers.containsKey(customerName)) {
+    public boolean registerUser(String userName, String password, Role role) {
+        if (users.containsKey(userName)) {
             return false;
         }
 
-        customers.put(customerName, new Customer(customerName, password));
+        users.put(userName, new User(userName, password, role));
         return true;
     }
 
-    public boolean loginCustomer(String customerName, String password) {
-        Customer customer = customers.get(customerName);
+    public User loginUser(String customerName, String password) {
+        User user = users.get(customerName);
 
-        if (customer == null) {
-            return false;
+        if (user == null || !user.getPassword().equals(password)) {
+            return null;
         }
 
-        return customer.getPassword().equals(password);
+        return user;
     }
 }
