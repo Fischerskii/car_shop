@@ -22,7 +22,7 @@ public class TerminalService {
         return choice;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         System.out.println("Enter user name: ");
         return scanner.nextLine();
     }
