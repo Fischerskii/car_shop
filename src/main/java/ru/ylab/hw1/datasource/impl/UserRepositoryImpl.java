@@ -1,15 +1,19 @@
-package ru.ylab.hw1.service;
+package ru.ylab.hw1.datasource.impl;
 
+import lombok.Getter;
+import ru.ylab.hw1.datasource.UserRepository;
 import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.Role;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserService {
-    Map<String, User> users = new HashMap<>();
+public class UserRepositoryImpl implements UserRepository {
+    private final Map<String, User> users = new HashMap<>();
+    @Getter
+    private User user;
 
-
+    @Override
     public boolean registerUser(String userName, String password, Role role) {
         if (users.containsKey(userName)) {
             return false;
@@ -19,8 +23,9 @@ public class UserService {
         return true;
     }
 
+    @Override
     public User loginUser(String customerName, String password) {
-        User user = users.get(customerName);
+        user = users.get(customerName);
 
         if (user == null || !user.getPassword().equals(password)) {
             return null;
