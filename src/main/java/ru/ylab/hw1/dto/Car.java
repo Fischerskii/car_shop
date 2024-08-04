@@ -12,4 +12,10 @@ public class Car {
     private int price;
     private String condition;
     private String vinNumber;
+
+    @Override
+    public String toString() {
+        return String.format("Brand: %s, Model: %s, Year: %d, Price: %d, Condition: %s, VIN number: %s",
+                brand, model, year, price, condition, vinNumber);
+    }
 }

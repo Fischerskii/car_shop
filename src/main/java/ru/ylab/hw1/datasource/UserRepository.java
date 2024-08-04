@@ -2,12 +2,13 @@ package ru.ylab.hw1.datasource;
 
 import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.Role;
+import ru.ylab.hw1.exceptions.DuplicateException;
 
 public interface UserRepository {
 
-    boolean registerUser(String userName, String password, Role role);
+    void registerUser(String userName, String password, Role role) throws DuplicateException;
 
-    User loginUser(String customerName, String password);
+    void loginUser(String customerName, String password);
 
     User getUser();
 }

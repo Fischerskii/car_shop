@@ -9,11 +9,11 @@ import java.util.Map;
 
 public interface CarRepository {
 
-    Map<String, Car> getCars() throws PermissionsException;
+    Map<String, Car> getCars();
 
     void addCar(Car car) throws DuplicateException, PermissionsException;
 
     void editCar(Car car) throws DataNotFoundException, PermissionsException;
 
-    void deleteCar(Car car) throws DataNotFoundException, PermissionsException;
+    void deleteCar(String vinNumber) throws DataNotFoundException, PermissionsException;
 }
