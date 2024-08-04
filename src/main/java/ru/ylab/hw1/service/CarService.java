@@ -1,17 +1,18 @@
 package ru.ylab.hw1.service;
 
 import ru.ylab.hw1.dto.Car;
-import ru.ylab.hw1.exceptions.DataNotFoundException;
 
-import java.util.Map;
+import java.util.List;
 
 public interface CarService {
 
     void addCar(Car car);
 
-    Car getCar(String vinNumber) throws DataNotFoundException;
+    void editCar(int index, Car updatedCar);
 
-    Map<String, Car> getCars();
+    void deleteCar(int index);
 
-    void deleteCar(String vinNumber);
+    void viewCars();
+
+    List<Car> getAllCars();
 }

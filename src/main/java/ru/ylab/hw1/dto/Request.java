@@ -9,23 +9,26 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Order {
-    public enum OrderStatus {
+public class Request {
+    public enum ServiceStatus {
         PENDING, COMPLETED, CANCELLED
     }
 
     private static int idCounter = 1;
+    @Getter
     private int id;
     private User client;
     private Car car;
-    private OrderStatus status;
-    private Date orderDate;
+    private String description;
+    private ServiceStatus status;
+    private Date requestDate;
 
-    public Order(User client, Car car) {
+    public Request(User client, Car car, String description) {
         this.id = idCounter++;
         this.client = client;
         this.car = car;
-        this.status = OrderStatus.PENDING;
-        this.orderDate = new Date();
+        this.description = description;
+        this.status = ServiceStatus.PENDING;
+        this.requestDate = new Date();
     }
 }
