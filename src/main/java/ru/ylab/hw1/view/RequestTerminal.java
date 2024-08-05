@@ -4,6 +4,9 @@ import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.repository.CarRepository;
+import ru.ylab.hw1.repository.RequestRepository;
+import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.service.RequestService;
 import ru.ylab.hw1.service.UserService;
@@ -14,9 +17,13 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class RequestTerminal {
-    UserService userService = new UserServiceImpl();
-    CarService carService = new CarServiceImpl();
-    RequestService requestService = new RequestServiceImpl();
+    private final CarRepository carRepository = new CarRepository();
+    private final RequestRepository requestRepository = new RequestRepository();
+    private final UserRepository userRepository = new UserRepository();
+
+    private final UserService userService = new UserServiceImpl(userRepository);
+    private final CarService carService = new CarServiceImpl(carRepository);
+    private final RequestService requestService = new RequestServiceImpl(requestRepository);
     
     private final Logger logger = new Logger();
 

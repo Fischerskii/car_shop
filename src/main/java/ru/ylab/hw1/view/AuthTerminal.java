@@ -1,6 +1,7 @@
 package ru.ylab.hw1.view;
 
 import ru.ylab.hw1.audit.Logger;
+import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.service.UserService;
 import ru.ylab.hw1.service.impl.UserServiceImpl;
 import ru.ylab.hw1.dto.User;
@@ -8,7 +9,8 @@ import ru.ylab.hw1.dto.User;
 import java.util.Scanner;
 
 public class AuthTerminal {
-    private final UserService userService = new UserServiceImpl();
+    private final UserRepository userRepository = new UserRepository();
+    private final UserService userService = new UserServiceImpl(userRepository);
     private final Terminal terminal;
     private final Logger logger = new Logger();
 

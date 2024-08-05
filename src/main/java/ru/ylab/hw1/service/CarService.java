@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CarService {
 
-    void addCar(Car car);
+    Car addCar(Car car);
 
     void editCar(int index, Car updatedCar);
 

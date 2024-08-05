@@ -4,6 +4,9 @@ import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Order;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.repository.CarRepository;
+import ru.ylab.hw1.repository.OrderRepository;
+import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.service.OrderService;
 import ru.ylab.hw1.service.UserService;
@@ -14,9 +17,13 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class OrderTerminal {
-    private final OrderService orderService = new OrderServiceImpl();
-    private final UserService userService = new UserServiceImpl();
-    private final CarService carService = new CarServiceImpl();
+    private final CarRepository carRepository = new CarRepository();
+    private final OrderRepository orderRepository = new OrderRepository();
+    private final UserRepository userRepository = new UserRepository();
+
+    private final OrderService orderService = new OrderServiceImpl(orderRepository);
+    private final UserService userService = new UserServiceImpl(userRepository);
+    private final CarService carService = new CarServiceImpl(carRepository);
     private final Logger logger = new Logger();
 
     protected void createOrder(Scanner scanner) {

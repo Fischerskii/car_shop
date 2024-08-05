@@ -2,13 +2,15 @@ package ru.ylab.hw1.view;
 
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.repository.CarRepository;
 import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.service.impl.CarServiceImpl;
 
 import java.util.Scanner;
 
 public class CarTerminal {
-    private final CarService carService = new CarServiceImpl();
+    private final CarRepository carRepository = new CarRepository();
+    private final CarService carService = new CarServiceImpl(carRepository);
     
     private final Logger logger = new Logger();
 
