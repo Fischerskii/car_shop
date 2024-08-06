@@ -103,7 +103,7 @@ public class Terminal {
         System.out.println("3. Edit Car");
         System.out.println("4. Delete Car");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         switch (choice) {
             case 1:
@@ -128,7 +128,7 @@ public class Terminal {
         System.out.println("2. Create Order");
         System.out.println("3. Change Order Status");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         switch (choice) {
             case 1:
