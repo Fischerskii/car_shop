@@ -1,13 +1,15 @@
 package ru.ylab.hw1.service.impl;
 
-import ru.ylab.hw1.repository.UserRepository;
+import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 import ru.ylab.hw1.service.UserService;
 import ru.ylab.hw1.dto.User;
 
-public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+import java.util.Map;
 
-    public UserServiceImpl(UserRepository userRepository) {
+public class UserServiceImpl implements UserService {
+    private final UserRepositoryImpl userRepository;
+
+    public UserServiceImpl(UserRepositoryImpl userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -20,7 +22,7 @@ public class UserServiceImpl implements UserService {
         return (user != null && user.getPassword().equals(password)) ? user : null;
     }
 
-    public void viewUsers() {
-        userRepository.findAll().values().forEach(System.out::println);
+    public Map<String, User> viewUsers() {
+        return userRepository.findAll();
     }
 }

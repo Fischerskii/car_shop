@@ -2,27 +2,14 @@ package ru.ylab.hw1.repository;
 
 import ru.ylab.hw1.dto.Car;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class CarRepository {
+public interface CarRepository {
+    Car save(Car car);
 
-    private final List<Car> cars = new ArrayList<>();
+    void edit(int index, Car updatedCar);
 
-    public Car save(Car car) {
-        cars.add(car);
-        return car;
-    }
+    void delete(int index);
 
-    public void edit(int index, Car updatedCar) {
-        cars.set(index, updatedCar);
-    }
-
-    public void delete(int index) {
-        cars.remove(index);
-    }
-
-    public List<Car> findAll() {
-        return cars;
-    }
+    List<Car> findAll();
 }

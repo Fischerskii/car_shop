@@ -2,20 +2,24 @@ package ru.ylab.hw1.view;
 
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
-import ru.ylab.hw1.repository.CarRepository;
+import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.service.impl.CarServiceImpl;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class CarTerminal {
-    private final CarRepository carRepository = new CarRepository();
+    private final CarRepositoryImpl carRepository = new CarRepositoryImpl();
     private final CarService carService = new CarServiceImpl(carRepository);
     
     private final Logger logger = new Logger();
 
     protected void viewCars() {
-        carService.viewCars();
+        List<Car> cars = carService.getAllCars();
+        for (int i = 0; i < cars.size(); i++) {
+            System.out.println(i + ". " + cars.get(i));
+        }
     }
 
     protected void addCar(Scanner scanner) {
@@ -37,7 +41,7 @@ public class CarTerminal {
     }
 
     protected void editCar(Scanner scanner) {
-        carService.viewCars();
+        viewCars();
         System.out.print("Enter index of car to edit: ");
         int index = scanner.nextInt();
         scanner.nextLine();
@@ -60,7 +64,7 @@ public class CarTerminal {
     }
 
     protected void deleteCar(Scanner scanner) {
-        carService.viewCars();
+        viewCars();
         System.out.print("Enter index of car to delete: ");
         int index = scanner.nextInt();
         scanner.nextLine();

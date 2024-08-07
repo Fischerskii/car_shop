@@ -1,27 +1,15 @@
 package ru.ylab.hw1.repository;
 
 import ru.ylab.hw1.dto.Order;
+import ru.ylab.hw1.enums.OrderStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-public class OrderRepository {
-    private final List<Order> orders = new ArrayList<>();
+public interface OrderRepository {
 
-    public void save(Order order) {
-        orders.add(order);
-    }
+    void save(Order order);
 
-    public void edit(int id, Order.OrderStatus status) {
-        for (Order order : orders) {
-            if (order.getId() == id) {
-                order.setStatus(status);
-                break;
-            }
-        }
-    }
+    void edit(int id, OrderStatus status);
 
-    public List<Order> findAll() {
-        return orders;
-    }
+    Map<Integer, Order> findAll();
 }

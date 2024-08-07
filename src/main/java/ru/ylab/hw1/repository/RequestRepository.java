@@ -1,27 +1,15 @@
 package ru.ylab.hw1.repository;
 
 import ru.ylab.hw1.dto.Request;
+import ru.ylab.hw1.enums.ServiceStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-public class RequestRepository {
-    private final List<Request> requests = new ArrayList<>();
+public interface RequestRepository {
 
-    public void save(Request request) {
-        requests.add(request);
-    }
+    void save(Request request);
 
-    public void edit(int id, Request.ServiceStatus status) {
-        for (Request request : requests) {
-            if (request.getId() == id) {
-                request.setStatus(status);
-                break;
-            }
-        }
-    }
+    void edit(int id, ServiceStatus status);
 
-    public List<Request> findAll() {
-        return requests;
-    }
+    Map<Integer, Request> findAll();
 }

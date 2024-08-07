@@ -1,12 +1,13 @@
 package ru.ylab.hw1.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.repository.UserRepository;
+import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserRepositoryImpl userRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -28,6 +29,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Проверка добавления/регистрации нового пользователя")
     void register_ShouldSaveUser() {
         String username = "Pavel";
         String password = "password";
@@ -39,6 +41,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Проверка работы авторизации")
     void login_ShouldReturnUserWhenCredentialsAreCorrect() {
         String username = "Pavel";
         String password = "password";
@@ -53,6 +56,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Проверка на невалидный ввод пароля")
     void login_ShouldReturnNullWhenCredentialsAreIncorrect() {
         String username = "Pavel";
         String password = "wrong_password";
@@ -64,20 +68,5 @@ class UserServiceTest {
         User result = userService.login(username, password);
 
         assertThat(result).isNull();
-    }
-
-    @Test
-    void viewUsers_ShouldPrintAllUsers() {
-        User user1 = new User("Pavel", "password", User.Role.CLIENT);
-        User user2 = new User("Sid", "password", User.Role.CLIENT);
-        Map<String, User> users = new HashMap<>();
-        users.put(user1.getUsername(), user1);
-        users.put(user2.getUsername(), user2);
-        when(userRepository.findAll()).thenReturn(users);
-
-        userService.viewUsers();
-
-        verify(userRepository, times(1)).findAll();
-        assertThat(userRepository.findAll()).containsValues(user1, user2);
     }
 }

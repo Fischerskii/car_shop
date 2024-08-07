@@ -1,6 +1,7 @@
 package ru.ylab.hw1.service.impl;
 
-import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,7 +10,8 @@ import org.mockito.MockitoAnnotations;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.repository.RequestRepository;
+import ru.ylab.hw1.enums.ServiceStatus;
+import ru.ylab.hw1.repository.impl.RequestRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -17,7 +19,7 @@ import static org.mockito.Mockito.*;
 class RequestServiceTest {
 
     @Mock
-    private RequestRepository requestRepository;
+    private RequestRepositoryImpl requestRepository;
 
     @InjectMocks
     private RequestServiceImpl requestService;
@@ -41,7 +43,7 @@ class RequestServiceTest {
     @Test
     void changeServiceRequestStatus_ShouldEditRequestStatusUsingRepository() {
         int requestId = 1;
-        Request.ServiceStatus status = Request.ServiceStatus.COMPLETED;
+        ServiceStatus status = ServiceStatus.COMPLETED;
 
         requestService.changeServiceRequestStatus(requestId, status);
 
@@ -54,7 +56,7 @@ class RequestServiceTest {
                 new Car("Toyota", "Camry", 2020, 30000, "New"), "Need service");
         Request request2 = new Request(new User("Sid", "password", User.Role.CLIENT),
                 new Car("Honda", "Civic", 2019, 25000, "Used"), "Need another service");
-        when(requestRepository.findAll()).thenReturn(List.of(request1, request2));
+        when(requestRepository.findAll()).thenReturn(Map.of(1, request1, 2, request2));
 
         requestService.viewServiceRequests();
 
@@ -67,11 +69,11 @@ class RequestServiceTest {
                 new Car("Toyota", "Camry", 2020, 30000, "New"), "Need service");
         Request request2 = new Request(new User("Sid", "password", User.Role.CLIENT),
                 new Car("Honda", "Civic", 2019, 25000, "Used"), "Need another service");
-        when(requestRepository.findAll()).thenReturn(List.of(request1, request2));
+        when(requestRepository.findAll()).thenReturn(Map.of(1, request1, 2, request2));
 
-        List<Request> requests = requestService.getAllServiceRequests();
+        Map<Integer, Request> requests = requestService.getAllServiceRequests();
 
-        assertThat(requests).containsExactly(request1, request2);
+        assertThat(requests).containsExactlyInAnyOrderEntriesOf(Map.of(1, request1, 2, request2));
         verify(requestRepository, times(1)).findAll();
     }
 }

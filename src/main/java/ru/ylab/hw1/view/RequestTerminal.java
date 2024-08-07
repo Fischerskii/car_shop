@@ -4,9 +4,10 @@ import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.repository.CarRepository;
-import ru.ylab.hw1.repository.RequestRepository;
-import ru.ylab.hw1.repository.UserRepository;
+import ru.ylab.hw1.enums.ServiceStatus;
+import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
+import ru.ylab.hw1.repository.impl.RequestRepositoryImpl;
+import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.service.RequestService;
 import ru.ylab.hw1.service.UserService;
@@ -17,13 +18,14 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class RequestTerminal {
-    private final CarRepository carRepository = new CarRepository();
-    private final RequestRepository requestRepository = new RequestRepository();
-    private final UserRepository userRepository = new UserRepository();
+    private final CarRepositoryImpl carRepository = new CarRepositoryImpl();
+    private final RequestRepositoryImpl requestRepository = new RequestRepositoryImpl();
+    private final UserRepositoryImpl userRepository = new UserRepositoryImpl();
 
     private final UserService userService = new UserServiceImpl(userRepository);
     private final CarService carService = new CarServiceImpl(carRepository);
     private final RequestService requestService = new RequestServiceImpl(requestRepository);
+    private final CarTerminal carTerminal = new CarTerminal();
     
     private final Logger logger = new Logger();
 
@@ -33,7 +35,7 @@ public class RequestTerminal {
         User client = userService.login(username, "");
 
         if (client != null) {
-            carService.viewCars();
+            carTerminal.viewCars();
             System.out.print("Enter index of car for service request: ");
             int carIndex = scanner.nextInt();
             scanner.nextLine();
@@ -57,10 +59,10 @@ public class RequestTerminal {
         System.out.print("Enter new status (1. PENDING, 2. COMPLETED, 3. CANCELLED): ");
         int statusChoice = scanner.nextInt();
         scanner.nextLine();
-        Request.ServiceStatus status = switch (statusChoice) {
-            case 1 -> Request.ServiceStatus.PENDING;
-            case 2 -> Request.ServiceStatus.COMPLETED;
-            case 3 -> Request.ServiceStatus.CANCELLED;
+        ServiceStatus status = switch (statusChoice) {
+            case 1 -> ServiceStatus.PENDING;
+            case 2 -> ServiceStatus.COMPLETED;
+            case 3 -> ServiceStatus.CANCELLED;
             default -> throw new IllegalArgumentException("Invalid status");
         };
 

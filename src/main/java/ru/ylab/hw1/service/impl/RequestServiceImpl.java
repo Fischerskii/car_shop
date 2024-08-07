@@ -3,15 +3,16 @@ package ru.ylab.hw1.service.impl;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.repository.RequestRepository;
+import ru.ylab.hw1.enums.ServiceStatus;
+import ru.ylab.hw1.repository.impl.RequestRepositoryImpl;
 import ru.ylab.hw1.service.RequestService;
 
-import java.util.List;
+import java.util.Map;
 
 public class RequestServiceImpl implements RequestService {
-    private final RequestRepository requestRepository;
+    private final RequestRepositoryImpl requestRepository;
 
-    public RequestServiceImpl(RequestRepository requestRepository) {
+    public RequestServiceImpl(RequestRepositoryImpl requestRepository) {
         this.requestRepository = requestRepository;
     }
 
@@ -19,15 +20,15 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.save(new Request(client, car, description));
     }
 
-    public void changeServiceRequestStatus(int id, Request.ServiceStatus status) {
+    public void changeServiceRequestStatus(int id, ServiceStatus status) {
         requestRepository.edit(id, status);
     }
 
     public void viewServiceRequests() {
-        getAllServiceRequests().forEach(System.out::println);
+        getAllServiceRequests().values().forEach(System.out::println);
     }
 
-    public List<Request> getAllServiceRequests() {
+    public Map<Integer, Request> getAllServiceRequests() {
         return requestRepository.findAll();
     }
 }

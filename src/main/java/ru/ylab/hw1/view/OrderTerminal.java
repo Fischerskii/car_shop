@@ -2,11 +2,11 @@ package ru.ylab.hw1.view;
 
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
-import ru.ylab.hw1.dto.Order;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.repository.CarRepository;
-import ru.ylab.hw1.repository.OrderRepository;
-import ru.ylab.hw1.repository.UserRepository;
+import ru.ylab.hw1.enums.OrderStatus;
+import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
+import ru.ylab.hw1.repository.impl.OrderRepositoryImpl;
+import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.service.OrderService;
 import ru.ylab.hw1.service.UserService;
@@ -17,13 +17,14 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class OrderTerminal {
-    private final CarRepository carRepository = new CarRepository();
-    private final OrderRepository orderRepository = new OrderRepository();
-    private final UserRepository userRepository = new UserRepository();
+    private final CarRepositoryImpl carRepository = new CarRepositoryImpl();
+    private final OrderRepositoryImpl orderRepository = new OrderRepositoryImpl();
+    private final UserRepositoryImpl userRepository = new UserRepositoryImpl();
 
     private final OrderService orderService = new OrderServiceImpl(orderRepository);
     private final UserService userService = new UserServiceImpl(userRepository);
     private final CarService carService = new CarServiceImpl(carRepository);
+    private final CarTerminal carTerminal = new CarTerminal();
     private final Logger logger = new Logger();
 
     protected void createOrder(Scanner scanner) {
@@ -32,7 +33,7 @@ public class OrderTerminal {
         User client = userService.login(username, "");
 
         if (client != null) {
-            carService.viewCars();
+            carTerminal.viewCars();
             System.out.print("Enter index of car to order: ");
             int carIndex = scanner.nextInt();
             scanner.nextLine();
@@ -46,17 +47,17 @@ public class OrderTerminal {
     }
 
     protected void changeOrderStatus(Scanner scanner) {
-        orderService.viewOrders();
+        viewOrders();
         System.out.print("Enter order ID to change status: ");
         int id = scanner.nextInt();
         scanner.nextLine();
         System.out.print("Enter new status (1. PENDING, 2. COMPLETED, 3. CANCELLED): ");
         int statusChoice = scanner.nextInt();
         scanner.nextLine();
-        Order.OrderStatus status = switch (statusChoice) {
-            case 1 -> Order.OrderStatus.PENDING;
-            case 2 -> Order.OrderStatus.COMPLETED;
-            case 3 -> Order.OrderStatus.CANCELLED;
+        OrderStatus status = switch (statusChoice) {
+            case 1 -> OrderStatus.PENDING;
+            case 2 -> OrderStatus.COMPLETED;
+            case 3 -> OrderStatus.CANCELLED;
             default -> throw new IllegalArgumentException("Invalid status");
         };
 
@@ -65,6 +66,6 @@ public class OrderTerminal {
     }
 
     protected void viewOrders() {
-        orderService.viewOrders();
+        orderService.getAllOrders();
     }
 }

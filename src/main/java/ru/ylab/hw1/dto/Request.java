@@ -1,21 +1,12 @@
 package ru.ylab.hw1.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.util.Date;
+import ru.ylab.hw1.enums.ServiceStatus;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class Request {
-    public enum ServiceStatus {
-        PENDING, COMPLETED, CANCELLED
-    }
-
-    private static int idCounter = 1;
-    @Getter
     private int id;
     private User client;
     private Car car;
@@ -24,7 +15,6 @@ public class Request {
     private Date requestDate;
 
     public Request(User client, Car car, String description) {
-        this.id = idCounter++;
         this.client = client;
         this.car = car;
         this.description = description;

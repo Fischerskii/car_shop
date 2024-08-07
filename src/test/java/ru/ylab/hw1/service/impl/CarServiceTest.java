@@ -1,12 +1,13 @@
 package ru.ylab.hw1.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.ylab.hw1.dto.Car;
-import ru.ylab.hw1.repository.CarRepository;
+import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 class CarServiceTest {
 
     @Mock
-    private CarRepository carRepository;
+    private CarRepositoryImpl carRepository;
 
     @InjectMocks
     private CarServiceImpl carService;
@@ -27,6 +28,7 @@ class CarServiceTest {
     }
 
     @Test
+    @DisplayName("Тест на сохранение авто")
     void addCar_ShouldSaveCar() {
         Car car = new Car("Toyota", "Camry", 2020, 30000, "New");
         when(carRepository.save(car)).thenReturn(car);
@@ -38,6 +40,7 @@ class CarServiceTest {
     }
 
     @Test
+    @DisplayName("Тест на редактирвоание авто")
     void editCar_ShouldEditCar() {
         Car updatedCar = new Car("Honda", "Accord", 2021, 32000, "New");
 
@@ -47,6 +50,7 @@ class CarServiceTest {
     }
 
     @Test
+    @DisplayName("Проверка работоспособности функционала удаления авто")
     void deleteCar_ShouldDeleteCar() {
         carService.deleteCar(0);
 
@@ -54,17 +58,7 @@ class CarServiceTest {
     }
 
     @Test
-    void viewCars_ShouldPrintAllCars() {
-        Car car1 = new Car("Toyota", "Camry", 2020, 30000, "New");
-        Car car2 = new Car("Honda", "Accord", 2021, 32000, "New");
-        when(carRepository.findAll()).thenReturn(List.of(car1, car2));
-
-        carService.viewCars();
-
-        verify(carRepository, times(1)).findAll();
-    }
-
-    @Test
+    @DisplayName("Проверка выдачи всего списка автомобилей")
     void getAllCars_ShouldReturnAllCars() {
         Car car1 = new Car("Toyota", "Camry", 2020, 30000, "New");
         Car car2 = new Car("Honda", "Accord", 2021, 32000, "New");

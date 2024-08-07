@@ -1,6 +1,7 @@
 package ru.ylab.hw1.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -8,9 +9,10 @@ import org.mockito.MockitoAnnotations;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Order;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.repository.OrderRepository;
+import ru.ylab.hw1.enums.OrderStatus;
+import ru.ylab.hw1.repository.impl.OrderRepositoryImpl;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.*;
 class OrderServiceTest {
 
     @Mock
-    private OrderRepository orderRepository;
+    private OrderRepositoryImpl orderRepository;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -29,10 +31,10 @@ class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("Проверка создания заказов")
     void createOrder_ShouldSaveOrder() {
         User client = new User("Pavel", "password", User.Role.CLIENT);
         Car car = new Car("Toyota", "Camry", 2020, 30000, "New");
-        Order order = new Order(client, car);
 
         orderService.createOrder(client, car);
 
@@ -40,9 +42,10 @@ class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("Проврка работоспособности функционала редактирования заказа")
     void changeOrderStatus_ShouldEditOrderStatusUsingRepository() {
         int orderId = 1;
-        Order.OrderStatus status = Order.OrderStatus.COMPLETED;
+        OrderStatus status = OrderStatus.COMPLETED;
 
         orderService.changeOrderStatus(orderId, status);
 
@@ -50,29 +53,17 @@ class OrderServiceTest {
     }
 
     @Test
-    void viewOrders_ShouldPrintAllOrders() {
-        Order order1 = new Order(new User("Pavel", "password", User.Role.CLIENT),
-                new Car("Toyota", "Camry", 2020, 30000, "New"));
-        Order order2 = new Order(new User("jane_doe", "password", User.Role.CLIENT),
-                new Car("Honda", "Civic", 2019, 25000, "Used"));
-        when(orderRepository.findAll()).thenReturn(List.of(order1, order2));
-
-        orderService.viewOrders();
-
-        verify(orderRepository, times(1)).findAll();
-    }
-
-    @Test
+    @DisplayName("Проверка выдачи всех заказов")
     void getAllOrders_ShouldReturnAllOrdersUsingRepository() {
         Order order1 = new Order(new User("Pavel", "password", User.Role.CLIENT),
                 new Car("Toyota", "Camry", 2020, 30000, "New"));
         Order order2 = new Order(new User("Sid", "password", User.Role.CLIENT),
                 new Car("Honda", "Civic", 2019, 25000, "Used"));
-        when(orderRepository.findAll()).thenReturn(List.of(order1, order2));
+        when(orderRepository.findAll()).thenReturn(Map.of(1, order1, 2, order2));
 
-        List<Order> orders = orderService.getAllOrders();
+        Map<Integer, Order> orders = orderService.getAllOrders();
 
-        assertThat(orders).containsExactly(order1, order2);
+        assertThat(orders).containsExactlyInAnyOrderEntriesOf(Map.of(1, order1, 2, order2));
         verify(orderRepository, times(1)).findAll();
     }
 }

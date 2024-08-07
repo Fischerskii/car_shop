@@ -12,7 +12,5 @@ public interface CarService {
 
     void deleteCar(int index);
 
-    void viewCars();
-
     List<Car> getAllCars();
 }
