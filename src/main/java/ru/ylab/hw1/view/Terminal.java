@@ -19,10 +19,11 @@ public class Terminal {
     private final Logger logger = new Logger();
 
     public Terminal() {
-        this.authTerminal = new AuthTerminal(this);
-        this.carTerminal = new CarTerminal();
-        this.orderTerminal = new OrderTerminal();
-        this.requestTerminal = new RequestTerminal();
+        TerminalFactory terminalFactory = new DefaultTerminalFactory(this);
+        this.authTerminal = terminalFactory.createAuthTerminal();
+        this.carTerminal = terminalFactory.createCarTerminal();
+        this.orderTerminal = terminalFactory.createOrderTerminal();
+        this.requestTerminal = terminalFactory.createRequestTerminal();
     }
 
     public void run() {

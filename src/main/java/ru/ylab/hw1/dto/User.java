@@ -2,14 +2,11 @@ package ru.ylab.hw1.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.ylab.hw1.enums.Role;
 
 @Data
 @AllArgsConstructor
 public class User {
-    public enum Role {
-        ADMIN, MANAGER, CLIENT
-    }
-
     private String username;
     private String password;
     private Role role;

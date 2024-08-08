@@ -2,9 +2,11 @@ package ru.ylab.hw1.view;
 
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
-import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.ServiceStatus;
+import ru.ylab.hw1.repository.CarRepository;
+import ru.ylab.hw1.repository.RequestRepository;
+import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 import ru.ylab.hw1.repository.impl.RequestRepositoryImpl;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
@@ -18,9 +20,9 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class RequestTerminal {
-    private final CarRepositoryImpl carRepository = new CarRepositoryImpl();
-    private final RequestRepositoryImpl requestRepository = new RequestRepositoryImpl();
-    private final UserRepositoryImpl userRepository = new UserRepositoryImpl();
+    private final CarRepository carRepository = new CarRepositoryImpl();
+    private final RequestRepository requestRepository = new RequestRepositoryImpl();
+    private final UserRepository userRepository = new UserRepositoryImpl();
 
     private final UserService userService = new UserServiceImpl(userRepository);
     private final CarService carService = new CarServiceImpl(carRepository);

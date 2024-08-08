@@ -4,6 +4,9 @@ import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.OrderStatus;
+import ru.ylab.hw1.repository.CarRepository;
+import ru.ylab.hw1.repository.OrderRepository;
+import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 import ru.ylab.hw1.repository.impl.OrderRepositoryImpl;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
@@ -17,9 +20,9 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class OrderTerminal {
-    private final CarRepositoryImpl carRepository = new CarRepositoryImpl();
-    private final OrderRepositoryImpl orderRepository = new OrderRepositoryImpl();
-    private final UserRepositoryImpl userRepository = new UserRepositoryImpl();
+    private final CarRepository carRepository = new CarRepositoryImpl();
+    private final OrderRepository orderRepository = new OrderRepositoryImpl();
+    private final UserRepository userRepository = new UserRepositoryImpl();
 
     private final OrderService orderService = new OrderServiceImpl(orderRepository);
     private final UserService userService = new UserServiceImpl(userRepository);

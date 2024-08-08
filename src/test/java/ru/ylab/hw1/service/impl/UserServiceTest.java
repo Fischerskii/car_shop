@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.enums.Role;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ class UserServiceTest {
     void register_ShouldSaveUser() {
         String username = "Pavel";
         String password = "password";
-        User.Role role = User.Role.CLIENT;
+        Role role = Role.CLIENT;
 
         userService.register(username, password, role);
 
@@ -45,7 +46,7 @@ class UserServiceTest {
     void login_ShouldReturnUserWhenCredentialsAreCorrect() {
         String username = "Pavel";
         String password = "password";
-        User user = new User(username, password, User.Role.CLIENT);
+        User user = new User(username, password, Role.CLIENT);
         Map<String, User> users = new HashMap<>();
         users.put(username, user);
         when(userRepository.findAll()).thenReturn(users);
@@ -60,7 +61,7 @@ class UserServiceTest {
     void login_ShouldReturnNullWhenCredentialsAreIncorrect() {
         String username = "Pavel";
         String password = "wrong_password";
-        User user = new User(username, "password", User.Role.CLIENT);
+        User user = new User(username, "password", Role.CLIENT);
         Map<String, User> users = new HashMap<>();
         users.put(username, user);
         when(userRepository.findAll()).thenReturn(users);

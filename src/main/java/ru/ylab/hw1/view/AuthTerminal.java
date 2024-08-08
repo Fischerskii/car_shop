@@ -1,10 +1,10 @@
 package ru.ylab.hw1.view;
 
 import ru.ylab.hw1.audit.Logger;
+import ru.ylab.hw1.enums.Role;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 import ru.ylab.hw1.service.UserService;
 import ru.ylab.hw1.service.impl.UserServiceImpl;
-import ru.ylab.hw1.dto.User;
 
 import java.util.Scanner;
 
@@ -26,10 +26,10 @@ public class AuthTerminal {
         System.out.print("Enter role (1. ADMIN, 2. MANAGER, 3. CLIENT): ");
         int roleChoice = scanner.nextInt();
         scanner.nextLine();
-        User.Role role = switch (roleChoice) {
-            case 1 -> User.Role.ADMIN;
-            case 2 -> User.Role.MANAGER;
-            case 3 -> User.Role.CLIENT;
+        Role role = switch (roleChoice) {
+            case 1 -> Role.ADMIN;
+            case 2 -> Role.MANAGER;
+            case 3 -> Role.CLIENT;
             default -> throw new IllegalArgumentException("Invalid role");
         };
 

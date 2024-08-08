@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.enums.Role;
 import ru.ylab.hw1.enums.ServiceStatus;
 import ru.ylab.hw1.repository.impl.RequestRepositoryImpl;
 
@@ -31,7 +32,7 @@ class RequestServiceTest {
 
     @Test
     void createServiceRequest_ShouldSaveRequest() {
-        User client = new User("Pavel", "password", User.Role.CLIENT);
+        User client = new User("Pavel", "password", Role.CLIENT);
         Car car = new Car("Toyota", "Camry", 2020, 30000, "New");
         Request request = new Request(client, car, "Need service");
 
@@ -52,9 +53,9 @@ class RequestServiceTest {
 
     @Test
     void viewServiceRequests_ShouldPrintAllRequests() {
-        Request request1 = new Request(new User("Pavel", "password", User.Role.CLIENT),
+        Request request1 = new Request(new User("Pavel", "password", Role.CLIENT),
                 new Car("Toyota", "Camry", 2020, 30000, "New"), "Need service");
-        Request request2 = new Request(new User("Sid", "password", User.Role.CLIENT),
+        Request request2 = new Request(new User("Sid", "password", Role.CLIENT),
                 new Car("Honda", "Civic", 2019, 25000, "Used"), "Need another service");
         when(requestRepository.findAll()).thenReturn(Map.of(1, request1, 2, request2));
 
@@ -65,9 +66,9 @@ class RequestServiceTest {
 
     @Test
     void getAllServiceRequests_ShouldReturnAllRequestsUsingRepository() {
-        Request request1 = new Request(new User("Pavel", "password", User.Role.CLIENT),
+        Request request1 = new Request(new User("Pavel", "password", Role.CLIENT),
                 new Car("Toyota", "Camry", 2020, 30000, "New"), "Need service");
-        Request request2 = new Request(new User("Sid", "password", User.Role.CLIENT),
+        Request request2 = new Request(new User("Sid", "password", Role.CLIENT),
                 new Car("Honda", "Civic", 2019, 25000, "Used"), "Need another service");
         when(requestRepository.findAll()).thenReturn(Map.of(1, request1, 2, request2));
 

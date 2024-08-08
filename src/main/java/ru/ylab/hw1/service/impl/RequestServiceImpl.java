@@ -4,15 +4,15 @@ import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Request;
 import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.ServiceStatus;
-import ru.ylab.hw1.repository.impl.RequestRepositoryImpl;
+import ru.ylab.hw1.repository.RequestRepository;
 import ru.ylab.hw1.service.RequestService;
 
 import java.util.Map;
 
 public class RequestServiceImpl implements RequestService {
-    private final RequestRepositoryImpl requestRepository;
+    private final RequestRepository requestRepository;
 
-    public RequestServiceImpl(RequestRepositoryImpl requestRepository) {
+    public RequestServiceImpl(RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
     }
 
