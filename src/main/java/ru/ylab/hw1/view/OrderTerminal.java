@@ -3,6 +3,7 @@ package ru.ylab.hw1.view;
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.OrderStatus;
 import ru.ylab.hw1.repository.CarRepository;
 import ru.ylab.hw1.repository.OrderRepository;
@@ -20,6 +21,7 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class OrderTerminal {
+    private Terminal terminal;
     private final CarRepository carRepository = new CarRepositoryImpl();
     private final OrderRepository orderRepository = new OrderRepositoryImpl();
     private final UserRepository userRepository = new UserRepositoryImpl();
@@ -27,8 +29,12 @@ public class OrderTerminal {
     private final OrderService orderService = new OrderServiceImpl(orderRepository);
     private final UserService userService = new UserServiceImpl(userRepository);
     private final CarService carService = new CarServiceImpl(carRepository);
-    private final CarTerminal carTerminal = new CarTerminal();
+    private final CarTerminal carTerminal = new CarTerminal(terminal);
     private final Logger logger = new Logger();
+
+    public OrderTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
 
     protected void createOrder(Scanner scanner) {
         System.out.print("Enter client username: ");
@@ -43,7 +49,8 @@ public class OrderTerminal {
 
             Car car = carService.getAllCars().get(carIndex);
             orderService.createOrder(client, car);
-            logger.log("Order created for " + car + " by " + client.getUsername());
+            logger.log(terminal.getCurrentUser().getUsername(), ActionType.CREATE_ORDER,
+                    "Order from client " + username + " with car " + car + " has been created");
         } else {
             System.out.println("Client not found.");
         }
@@ -65,7 +72,9 @@ public class OrderTerminal {
         };
 
         orderService.changeOrderStatus(id, status);
-        logger.log("Order status changed to " + status + " for order ID " + id);
+        String currentUser = terminal.getCurrentUser().getUsername();
+        logger.log(currentUser, ActionType.CHANGE_ORDER_STATUS,
+                "Order from client " + currentUser + " with id " + id + " has been changed");
     }
 
     protected void viewOrders() {

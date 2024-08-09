@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.enums.ActionType;
 
 import java.util.Scanner;
 
@@ -88,7 +89,7 @@ public class Terminal {
                 currentUser = null;
                 break;
             case 6:
-                logger.viewLogs();
+                viewLogs(scanner);
                 break;
             case 7:
                 exportLogs(scanner);
@@ -168,12 +169,31 @@ public class Terminal {
         }
     }
 
+    private void viewLogs(Scanner scanner) {
+        System.out.print("Enter username to filter by (or leave blank): ");
+        String userFilter = scanner.nextLine().trim();
+        userFilter = userFilter.isEmpty() ? null : userFilter;
 
+        System.out.print("Enter action type to filter by (or leave blank): ");
+        String actionTypeFilter = scanner.nextLine().trim();
+        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
+
+        logger.viewLogs(userFilter, actionType, null, null);
+    }
 
     private void exportLogs(Scanner scanner) {
         System.out.print("Enter filename to export logs: ");
         String filename = scanner.nextLine();
-        logger.exportLogs(filename);
+
+        System.out.print("Enter username to filter by (or leave blank): ");
+        String userFilter = scanner.nextLine().trim();
+        userFilter = userFilter.isEmpty() ? null : userFilter;
+
+        System.out.print("Enter action type to filter by (or leave blank): ");
+        String actionTypeFilter = scanner.nextLine().trim();
+        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
+
+        logger.exportLogs(filename, userFilter, actionType, null, null);
         System.out.println("Logs exported to " + filename);
     }
 }

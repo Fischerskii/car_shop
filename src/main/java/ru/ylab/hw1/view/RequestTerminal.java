@@ -3,6 +3,7 @@ package ru.ylab.hw1.view;
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.ServiceStatus;
 import ru.ylab.hw1.repository.CarRepository;
 import ru.ylab.hw1.repository.RequestRepository;
@@ -20,6 +21,7 @@ import ru.ylab.hw1.service.impl.UserServiceImpl;
 import java.util.Scanner;
 
 public class RequestTerminal {
+    private Terminal terminal;
     private final CarRepository carRepository = new CarRepositoryImpl();
     private final RequestRepository requestRepository = new RequestRepositoryImpl();
     private final UserRepository userRepository = new UserRepositoryImpl();
@@ -27,9 +29,13 @@ public class RequestTerminal {
     private final UserService userService = new UserServiceImpl(userRepository);
     private final CarService carService = new CarServiceImpl(carRepository);
     private final RequestService requestService = new RequestServiceImpl(requestRepository);
-    private final CarTerminal carTerminal = new CarTerminal();
-    
+    private final CarTerminal carTerminal = new CarTerminal(terminal);
+
     private final Logger logger = new Logger();
+
+    public RequestTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
 
     protected void createServiceRequest(Scanner scanner) {
         System.out.print("Enter client username: ");
@@ -47,7 +53,8 @@ public class RequestTerminal {
             String description = scanner.nextLine();
 
             requestService.createServiceRequest(client, car, description);
-            logger.log("Service request created for " + car + " by " + client.getUsername() + " [" + description + "]");
+            logger.log(username, ActionType.CREATE_SERVICE_REQUEST,
+                    "Request created for client " + client + ", car " + car + " has been created");
         } else {
             System.out.println("Client not found.");
         }
@@ -69,7 +76,8 @@ public class RequestTerminal {
         };
 
         requestService.changeServiceRequestStatus(id, status);
-        logger.log("Service request status changed to " + status + " for request ID " + id);
+        logger.log(terminal.getCurrentUser().getUsername(), ActionType.CHANGE_SERVICE_REQUEST_STATUS,
+                "Request with id " + id + " has been changed to status " + status);
     }
 
     protected void viewServiceRequests() {

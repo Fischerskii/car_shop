@@ -1,7 +1,9 @@
 package ru.ylab.hw1.view;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.audit.Logger;
 import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.repository.CarRepository;
 import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 import ru.ylab.hw1.service.CarService;
@@ -10,11 +12,17 @@ import ru.ylab.hw1.service.impl.CarServiceImpl;
 import java.util.List;
 import java.util.Scanner;
 
+@Slf4j
 public class CarTerminal {
+    private final Terminal terminal;
     private final CarRepository carRepository = new CarRepositoryImpl();
     private final CarService carService = new CarServiceImpl(carRepository);
     
     private final Logger logger = new Logger();
+
+    public CarTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
 
     protected void viewCars() {
         List<Car> cars = carService.getAllCars();
@@ -38,7 +46,7 @@ public class CarTerminal {
 
         Car car = new Car(brand, model, year, price, condition);
         carService.addCar(car);
-        logger.log("Car added: " + car);
+        logger.log(terminal.getCurrentUser().getUsername(), ActionType.ADD_CAR, "Car " + car + " added");
     }
 
     protected void editCar(Scanner scanner) {
@@ -61,7 +69,7 @@ public class CarTerminal {
 
         Car updatedCar = new Car(brand, model, year, price, condition);
         carService.editCar(index, updatedCar);
-        logger.log("Car edited: " + updatedCar);
+        logger.log(terminal.getCurrentUser().getUsername(), ActionType.EDIT_CAR, "Car " + updatedCar + " updated");
     }
 
     protected void deleteCar(Scanner scanner) {
@@ -71,6 +79,6 @@ public class CarTerminal {
         scanner.nextLine();
 
         carService.deleteCar(index);
-        logger.log("Car deleted at index " + index);
+        logger.log(terminal.getCurrentUser().getUsername(), ActionType.DELETE_CAR, "Car " + index + " deleted");
     }
 }

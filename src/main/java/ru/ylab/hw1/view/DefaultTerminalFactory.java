@@ -15,16 +15,16 @@ public class DefaultTerminalFactory implements TerminalFactory {
 
     @Override
     public CarTerminal createCarTerminal() {
-        return new CarTerminal();
+        return new CarTerminal(terminal);
     }
 
     @Override
     public OrderTerminal createOrderTerminal() {
-        return new OrderTerminal();
+        return new OrderTerminal(terminal);
     }
 
     @Override
     public RequestTerminal createRequestTerminal() {
-        return new RequestTerminal();
+        return new RequestTerminal(terminal);
     }
 }

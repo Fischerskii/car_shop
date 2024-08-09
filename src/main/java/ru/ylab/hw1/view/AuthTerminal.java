@@ -1,15 +1,19 @@
 package ru.ylab.hw1.view;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.audit.Logger;
+import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.Role;
+import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 import ru.ylab.hw1.service.UserService;
 import ru.ylab.hw1.service.impl.UserServiceImpl;
 
 import java.util.Scanner;
 
+@Slf4j
 public class AuthTerminal {
-    private final UserRepositoryImpl userRepository = new UserRepositoryImpl();
+    private final UserRepository userRepository = new UserRepositoryImpl();
     private final UserService userService = new UserServiceImpl(userRepository);
     private final Terminal terminal;
     private final Logger logger = new Logger();
@@ -34,7 +38,7 @@ public class AuthTerminal {
         };
 
         userService.register(username, password, role);
-        logger.log("User registered: " + username + " [" + role + "]");
+        logger.log(username, ActionType.REGISTER, "User " + username + " registered: ");
     }
 
     protected void loginUser(Scanner scanner) {
@@ -46,7 +50,7 @@ public class AuthTerminal {
         terminal.setCurrentUser(userService.login(username, password));
 
         if (terminal.getCurrentUser() != null) {
-            logger.log("User logged in: " + username);
+            logger.log(username, ActionType.LOGIN, "User logged in: " + username);
         } else {
             System.out.println("Invalid credentials, please try again.");
         }
