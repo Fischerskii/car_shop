@@ -1,7 +1,5 @@
 package ru.ylab.hw1.repository.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.ylab.hw1.config.DatabaseConfig;
 import ru.ylab.hw1.dto.UserDTO;
 import ru.ylab.hw1.enums.Role;

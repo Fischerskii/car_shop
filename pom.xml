@@ -18,6 +18,7 @@
         <assertj.version>3.26.3</assertj.version>
         <logback.version>1.5.6</logback.version>
         <postgresql.version>42.7.3</postgresql.version>
+        <liquibase.version>4.29.0</liquibase.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -63,6 +64,13 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+
     </dependencies>
     <repositories>
         <repository>
