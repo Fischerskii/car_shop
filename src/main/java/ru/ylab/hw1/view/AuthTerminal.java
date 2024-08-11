@@ -1,7 +1,7 @@
 package ru.ylab.hw1.view;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.dto.UserDTO;
 import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.Role;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
@@ -70,9 +70,9 @@ public class AuthTerminal implements TerminalAction{
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        User user = userService.login(username, password);
-        if (user != null) {
-            terminal.setCurrentUser(user);
+        UserDTO userDTO = userService.login(username, password);
+        if (userDTO != null) {
+            terminal.setCurrentUserDTO(userDTO);
             loggerService.logAction(username, ActionType.LOGIN, "User " + username + " logged in.");
         } else {
             System.out.println("Invalid credentials, please try again.");

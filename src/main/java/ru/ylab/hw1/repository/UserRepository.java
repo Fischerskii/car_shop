@@ -1,19 +1,18 @@
 package ru.ylab.hw1.repository;
 
-import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.dto.UserDTO;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserRepository {
 
-    void save(User user);
+    void save(UserDTO userDTO);
 
-    User getUserByUsername(String username);
+    UserDTO getUserByUsername(String username);
 
-    List<User> getAllUsers();
+    List<UserDTO> getAllUsers();
 
-    void update(User user);
+    void update(UserDTO userDTO);
 
     void delete(String username);
 }

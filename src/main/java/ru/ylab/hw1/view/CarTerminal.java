@@ -1,7 +1,7 @@
 package ru.ylab.hw1.view;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.dto.CarDTO;
 import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 import ru.ylab.hw1.service.CarService;
@@ -50,9 +50,9 @@ public class CarTerminal implements TerminalAction {
     }
 
     protected void viewCars() {
-        List<Car> cars = carService.getAllCars();
-        for (int i = 0; i < cars.size(); i++) {
-            System.out.println(i + ". " + cars.get(i));
+        List<CarDTO> carDTOS = carService.getAllCars();
+        for (int i = 0; i < carDTOS.size(); i++) {
+            System.out.println(i + ". " + carDTOS.get(i));
         }
     }
 
@@ -71,9 +71,9 @@ public class CarTerminal implements TerminalAction {
         System.out.print("Enter condition: ");
         String condition = scanner.nextLine();
 
-        Car car = new Car(vin, brand, model, year, price, condition);
-        carService.addCar(car);
-        loggerService.logAction(terminal.getCurrentUser().getUsername(), ActionType.ADD_CAR, "Car " + car + " added.");
+        CarDTO carDTO = new CarDTO(vin, brand, model, year, price, condition);
+        carService.addCar(carDTO);
+        loggerService.logAction(terminal.getCurrentUserDTO().getUsername(), ActionType.ADD_CAR, "Car " + carDTO + " added.");
     }
 
     protected void editCar(Scanner scanner) {
@@ -91,9 +91,9 @@ public class CarTerminal implements TerminalAction {
         System.out.print("Enter new condition: ");
         String condition = scanner.nextLine();
 
-        Car updatedCar = new Car(vin, brand, model, year, price, condition);
-        carService.editCar(updatedCar);
-        loggerService.logAction(terminal.getCurrentUser().getUsername(), ActionType.EDIT_CAR, "Car " + updatedCar + " updated.");
+        CarDTO updatedCarDTO = new CarDTO(vin, brand, model, year, price, condition);
+        carService.editCar(updatedCarDTO);
+        loggerService.logAction(terminal.getCurrentUserDTO().getUsername(), ActionType.EDIT_CAR, "Car " + updatedCarDTO + " updated.");
     }
 
     protected void deleteCar(Scanner scanner) {
@@ -101,6 +101,6 @@ public class CarTerminal implements TerminalAction {
         String vin = scanner.nextLine();
 
         carService.deleteCar(vin);
-        loggerService.logAction(terminal.getCurrentUser().getUsername(), ActionType.DELETE_CAR, "Car with VIN: " + vin + " was deleted.");
+        loggerService.logAction(terminal.getCurrentUserDTO().getUsername(), ActionType.DELETE_CAR, "Car with VIN: " + vin + " was deleted.");
     }
 }

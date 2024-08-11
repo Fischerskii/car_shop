@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.enums.OrderStatus;
 import ru.ylab.hw1.repository.OrderRepository;
 import ru.ylab.hw1.service.OrderService;
-import ru.ylab.hw1.dto.Order;
+import ru.ylab.hw1.dto.OrderDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +19,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrder(Order order) {
-        orderRepository.save(order);
-        log.info("Order with id {} has been created", order.getId());
+    public void createOrder(OrderDTO orderDTO) {
+        orderRepository.save(orderDTO);
+        log.info("Order with id {} has been created", orderDTO.getId());
     }
 
     @Override
@@ -31,12 +31,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<Order> getOrderById(UUID id) {
+    public Optional<OrderDTO> getOrderById(UUID id) {
         return orderRepository.findById(id);
     }
 
     @Override
-    public List<Order> getAllOrders() {
+    public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll();
     }
 }

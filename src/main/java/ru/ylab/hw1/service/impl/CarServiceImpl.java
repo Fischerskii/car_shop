@@ -3,7 +3,7 @@ package ru.ylab.hw1.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.repository.CarRepository;
 import ru.ylab.hw1.service.CarService;
-import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.dto.CarDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +17,13 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void addCar(Car car) {
-        carRepository.save(car);
+    public void addCar(CarDTO carDTO) {
+        carRepository.save(carDTO);
     }
 
     @Override
-    public void editCar(Car car) {
-        carRepository.edit(car);
+    public void editCar(CarDTO carDTO) {
+        carRepository.edit(carDTO);
     }
 
     @Override
@@ -32,12 +32,12 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAllCars() {
+    public List<CarDTO> getAllCars() {
         return carRepository.findAll();
     }
 
     @Override
-    public Optional<Car> getCar(String vinNumber) {
+    public Optional<CarDTO> getCar(String vinNumber) {
         return carRepository.findByVin(vinNumber);
     }
 }

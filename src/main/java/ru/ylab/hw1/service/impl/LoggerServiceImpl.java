@@ -1,6 +1,6 @@
 package ru.ylab.hw1.service.impl;
 
-import ru.ylab.hw1.dto.LogEntry;
+import ru.ylab.hw1.dto.LogEntryDTO;
 import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.repository.LoggerRepository;
 import ru.ylab.hw1.service.LoggerService;
@@ -20,30 +20,30 @@ public class LoggerServiceImpl implements LoggerService {
 
     @Override
     public void logAction(String username, ActionType actionType, String details) {
-        LogEntry logEntry = new LogEntry(username, actionType, details);
-        loggerRepository.save(logEntry);
+        LogEntryDTO logEntryDTO = new LogEntryDTO(username, actionType, details);
+        loggerRepository.save(logEntryDTO);
     }
 
     @Override
-    public List<LogEntry> getLogsByUser(String username) {
+    public List<LogEntryDTO> getLogsByUser(String username) {
         return loggerRepository.findByUsername(username);
     }
 
     @Override
-    public List<LogEntry> getLogsByDate(LocalDate date) {
+    public List<LogEntryDTO> getLogsByDate(LocalDate date) {
         return loggerRepository.findByDate(date);
     }
 
     @Override
-    public List<LogEntry> getLogsByAction(ActionType actionType) {
+    public List<LogEntryDTO> getLogsByAction(ActionType actionType) {
         return loggerRepository.findByActionType(actionType);
     }
 
     @Override
     public void exportLogsToFile(String filePath) {
-        List<LogEntry> logs = loggerRepository.findAll();
+        List<LogEntryDTO> logs = loggerRepository.findAll();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (LogEntry log : logs) {
+            for (LogEntryDTO log : logs) {
                 writer.write(log.toString());
                 writer.newLine();
             }

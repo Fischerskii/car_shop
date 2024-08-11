@@ -1,19 +1,19 @@
 package ru.ylab.hw1.service;
 
-import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.dto.CarDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CarService {
 
-    void addCar(Car car);
+    void addCar(CarDTO carDTO);
 
-    void editCar(Car car);
+    void editCar(CarDTO carDTO);
 
     void deleteCar(String vinNumber);
 
-    List<Car> getAllCars();
+    List<CarDTO> getAllCars();
 
-    Optional<Car> getCar(String vinNumber);
+    Optional<CarDTO> getCar(String vinNumber);
 }

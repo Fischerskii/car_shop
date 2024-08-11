@@ -2,8 +2,10 @@ package ru.ylab.hw1.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.config.DatabaseConfig;
-import ru.ylab.hw1.dto.Order;
+import ru.ylab.hw1.dto.OrderDTO;
 import ru.ylab.hw1.enums.OrderStatus;
+import ru.ylab.hw1.exception.DataAccessException;
+import ru.ylab.hw1.repository.AbstractRepository;
 import ru.ylab.hw1.repository.OrderRepository;
 
 import java.sql.*;
@@ -11,96 +13,120 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
-public class OrderRepositoryImpl implements OrderRepository {
+public class OrderRepositoryImpl extends AbstractRepository implements OrderRepository {
 
-    public void save(Order order) {
-        String sql = "INSERT INTO order (client, car, status, orderDate) VALUES (?, ?, ?, ?)";
+    @Override
+    public void save(OrderDTO orderDTO) {
+        String query = "INSERT INTO order (id, user_name, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = DatabaseConfig.getConnection();
+            connection.setAutoCommit(false);
 
-            statement.setObject(1, order.getId());
-            statement.setObject(2, order.getUserName());
-            statement.setString(3, order.getCarVinNumber());
-            statement.setObject(4, order.getStatus());
-            statement.setTimestamp(5, Timestamp.valueOf(order.getOrderCreationDate()));
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setObject(1, orderDTO.getId());
+                statement.setString(2, orderDTO.getUserName());
+                statement.setString(3, orderDTO.getCarVinNumber());
+                statement.setString(4, String.valueOf(orderDTO.getStatus()));
+                statement.setTimestamp(5, Timestamp.valueOf(orderDTO.getOrderCreationDate()));
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            log.error("Error creating with id: {}", order.getId(), e);
-        }
-    }
-
-    public void edit(UUID id, OrderStatus orderNewStatus) {
-        String sql = "UPDATE order SET status = ? WHERE id = ?";
-
-        try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setString(1, String.valueOf(orderNewStatus));
-            statement.setObject(2, id);
-
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated == 0) {
-                log.warn("Not found order with id: {}", id);
-            } else {
-                log.info("Order with id: {} was changed status to: {}", id, orderNewStatus);
+                statement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Error creating order with id: {}", orderDTO.getId(), e);
+                throw new DataAccessException("Error creating order with id: " + orderDTO.getId(), e);
             }
         } catch (SQLException e) {
-            log.error("Error updating with id: {}", id, e);
+            log.error("Failed to save order", e);
+        } finally {
+            closeConnection(connection);
         }
     }
 
-    public List<Order> findAll() {
-        String selectQuery = "SELECT id, user_name, car_vin_number, status, order_creation_date FROM order";
-        List<Order> orders = new ArrayList<>();
+    @Override
+    public void edit(UUID id, OrderStatus orderNewStatus) {
+        String query = "UPDATE order SET status = ? WHERE id = ?";
+
+        Connection connection = null;
+        try {
+            connection = DatabaseConfig.getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, String.valueOf(orderNewStatus));
+                statement.setObject(2, id);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated == 0) {
+                    log.warn("Not found order with id: {}", id);
+                } else {
+                    log.info("Order with id: {} was changed status to: {}", id, orderNewStatus);
+                }
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Error updating order with id: {}", id, e);
+                throw new DataAccessException("Error updating order with id: " + id, e);
+            }
+        } catch (SQLException e) {
+            log.error("Failed to edit order", e);
+        } finally {
+            closeConnection(connection);
+        }
+    }
+
+    public List<OrderDTO> findAll() {
+        String query = "SELECT id, user_name, car_vin_number, status, order_creation_date FROM order";
+        List<OrderDTO> orderDTOS = new ArrayList<>();
 
         try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(selectQuery);
+             PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                Order order = mapRowToOrder(resultSet);
+                OrderDTO orderDTO = mapRowToOrder(resultSet);
 
-                orders.add(order);
+                orderDTOS.add(orderDTO);
             }
         } catch (SQLException e) {
             log.error("Error finding orders", e);
         }
 
-        return orders;
+        return orderDTOS;
     }
 
     @Override
-    public Optional<Order> findById(UUID id) {
-        String sql = "SELECT * FROM order WHERE id = ?";
+    public Optional<OrderDTO> findById(UUID id) {
+        String query = "SELECT * FROM order WHERE id = ?";
 
-        Order order = null;
+        OrderDTO orderDTO = null;
         try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, String.valueOf(id));
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                order = mapRowToOrder(resultSet);
+                orderDTO = mapRowToOrder(resultSet);
             }
 
         } catch (SQLException e) {
             log.error("Error finding order with id: {}", id, e);
         }
 
-        return Optional.ofNullable(order);
+        return Optional.ofNullable(orderDTO);
     }
 
-    private Order mapRowToOrder(ResultSet resultSet) throws SQLException {
+    private OrderDTO mapRowToOrder(ResultSet resultSet) throws SQLException {
         String id = resultSet.getString("id");
         String userName = resultSet.getString("user_name");
         String carVinNumber = resultSet.getString("car_vin_number");
         OrderStatus status = OrderStatus.valueOf(resultSet.getString("status"));
         LocalDateTime orderCreationDate = resultSet.getTimestamp("order_creation_date").toLocalDateTime();
 
-        return Order.builder()
+        return OrderDTO.builder()
                 .id(UUID.fromString(id))
                 .userName(userName)
                 .carVinNumber(carVinNumber)

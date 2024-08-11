@@ -2,7 +2,9 @@ package ru.ylab.hw1.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.config.DatabaseConfig;
-import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.dto.CarDTO;
+import ru.ylab.hw1.exception.DataAccessException;
+import ru.ylab.hw1.repository.AbstractRepository;
 import ru.ylab.hw1.repository.CarRepository;
 
 import java.sql.Connection;
@@ -14,65 +16,103 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-public class CarRepositoryImpl implements CarRepository {
+public class CarRepositoryImpl extends AbstractRepository implements CarRepository {
 
-    public Car save(Car car) {
+    public CarDTO save(CarDTO carDTO) {
         String sql = "INSERT INTO car (brand, model, year, price, condition) VALUES (?, ?, ?, ?, ?) RETURNING id";
 
-        try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = DatabaseConfig.getConnection();
+            connection.setAutoCommit(false);
 
-            createStatement(car, statement);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                createStatement(carDTO, statement);
 
-            ResultSet resultSet = statement.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String vin = resultSet.getString("vin");
+                    carDTO.setVinNumber(vin);
+                    log.info("Car with VIN {} has been saved", vin);
+                }
 
-            if (resultSet.next()) {
-                String vin = resultSet.getString("vin");
-                car.setVinNumber(vin);
-                log.info("Car with vin {} has been saved", vin);
+                connection.commit();
+            } catch (SQLException e) {
+                rollbackConnection(connection);
+                log.error("Error creating car with VIN: {}", carDTO.getVinNumber(), e);
             }
         } catch (SQLException e) {
-            log.error("Error creating car with VIN: {}", car.getVinNumber(), e);
+            log.error("Database error when saving car", e);
+            throw new DataAccessException("Error saving car", e);
+        } finally {
+            closeConnection(connection);
         }
 
-        return car;
+        return carDTO;
     }
 
-    public void edit(Car car) {
+    public void edit(CarDTO carDTO) {
         String sql = "UPDATE cars SET brand = ?, model = ?, year = ?, price = ?, condition = ? WHERE id = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        Connection connection = null;
 
-            createStatement(car, statement);
+        try {
+            connection = DatabaseConfig.getConnection();
+            connection.setAutoCommit(false);
 
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated == 0) {
-                log.warn("Not found car with VIN: {}", car.getVinNumber());
-            } else {
-                log.info("Car with VIN {} was updated successfully.", car.getVinNumber());
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                createStatement(carDTO, statement);
+
+                int rowUpdated = statement.executeUpdate();
+
+                if (rowUpdated == 0) {
+                    log.warn("Not found car with VIN: {}", carDTO.getVinNumber());
+                } else {
+                    log.info("Car with VIN {} was updated successfully.", carDTO.getVinNumber());
+                }
+
+                connection.commit();
+            } catch (SQLException e) {
+                rollbackConnection(connection);
+                log.error("Error updating car with VIN: {}", carDTO.getVinNumber(), e);
             }
-
         } catch (SQLException e) {
-            log.error("Error updating car with VIN: {}", car.getVinNumber(), e);
+            log.error("Database error when updating car", e);
+            throw new DataAccessException("Error updating car", e);
+        } finally {
+            closeConnection(connection);
         }
     }
 
     public void delete(String vinNumber) {
         String sql = "DELETE FROM cars WHERE id = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, vinNumber);
-            statement.executeUpdate();
-            log.info("Car with VIN {} was deleted successfully.", vinNumber);
+        Connection connection = null;
+
+        try {
+            connection = DatabaseConfig.getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, vinNumber);
+                statement.executeUpdate();
+                log.info("Car with VIN {} was deleted successfully.", vinNumber);
+
+                connection.commit();
+            } catch (SQLException e) {
+                rollbackConnection(connection);
+                log.error("Error deleting car with VIN: {}", vinNumber, e);
+            }
         } catch (SQLException e) {
-            log.error("Error deleting car with VIN: {}", vinNumber, e);
+            log.error("Database error when deleting car", e);
+            throw new DataAccessException("Error deleting car", e);
+        } finally {
+            closeConnection(connection);
         }
     }
 
-    public List<Car> findAll() {
-        List<Car> cars = new ArrayList<>();
+    public List<CarDTO> findAll() {
+        List<CarDTO> carDTOS = new ArrayList<>();
         String sql = "SELECT * FROM cars";
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -80,27 +120,27 @@ public class CarRepositoryImpl implements CarRepository {
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                Car car = new Car();
-                car.setVinNumber(resultSet.getString("vin"));
-                car.setBrand(resultSet.getString("brand"));
-                car.setModel(resultSet.getString("model"));
-                car.setYear(resultSet.getInt("year"));
-                car.setPrice(resultSet.getDouble("price"));
-                car.setCondition(resultSet.getString("condition"));
+                CarDTO carDTO = new CarDTO();
+                carDTO.setVinNumber(resultSet.getString("vin"));
+                carDTO.setBrand(resultSet.getString("brand"));
+                carDTO.setModel(resultSet.getString("model"));
+                carDTO.setYear(resultSet.getInt("year"));
+                carDTO.setPrice(resultSet.getDouble("price"));
+                carDTO.setCondition(resultSet.getString("condition"));
 
-                cars.add(car);
+                carDTOS.add(carDTO);
             }
         } catch (SQLException e) {
             log.error("Error fetching cars", e);
         }
-        return cars;
+        return carDTOS;
     }
 
-    public Optional<Car> findByVin(String vinNumber) {
+    public Optional<CarDTO> findByVin(String vinNumber) {
         String sql = "SELECT id, brand, model, year, price, condition FROM car WHERE vin = ?";
 
         try (Connection connection = DatabaseConfig.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, vinNumber);
 
@@ -112,8 +152,8 @@ public class CarRepositoryImpl implements CarRepository {
                     double price = resultSet.getDouble("price");
                     String condition = resultSet.getString("condition");
 
-                    Car car = new Car(vinNumber, brand, model, year, price, condition);
-                    return Optional.of(car);
+                    CarDTO carDTO = new CarDTO(vinNumber, brand, model, year, price, condition);
+                    return Optional.of(carDTO);
                 }
             }
 
@@ -124,12 +164,12 @@ public class CarRepositoryImpl implements CarRepository {
         return Optional.empty();
     }
 
-    private void createStatement(Car car, PreparedStatement statement) throws SQLException {
-        statement.setString(1, car.getVinNumber());
-        statement.setString(2, car.getBrand());
-        statement.setString(3, car.getModel());
-        statement.setInt(4, car.getYear());
-        statement.setDouble(5, car.getPrice());
-        statement.setString(6, car.getCondition());
+    private void createStatement(CarDTO carDTO, PreparedStatement statement) throws SQLException {
+        statement.setString(1, carDTO.getVinNumber());
+        statement.setString(2, carDTO.getBrand());
+        statement.setString(3, carDTO.getModel());
+        statement.setInt(4, carDTO.getYear());
+        statement.setDouble(5, carDTO.getPrice());
+        statement.setString(6, carDTO.getCondition());
     }
 }

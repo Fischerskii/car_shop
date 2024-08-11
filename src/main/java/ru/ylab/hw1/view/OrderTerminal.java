@@ -1,6 +1,6 @@
 package ru.ylab.hw1.view;
 
-import ru.ylab.hw1.dto.Order;
+import ru.ylab.hw1.dto.OrderDTO;
 import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.OrderStatus;
 import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
@@ -68,9 +68,9 @@ public class OrderTerminal implements TerminalAction {
             }
         }
 
-        String username = terminal.getCurrentUser().getUsername();
+        String username = terminal.getCurrentUserDTO().getUsername();
 
-        Order newOrder = Order.builder()
+        OrderDTO newOrderDTO = OrderDTO.builder()
                 .id(UUID.randomUUID())
                 .userName(username)
                 .carVinNumber(vinNumber)
@@ -78,7 +78,7 @@ public class OrderTerminal implements TerminalAction {
                 .orderCreationDate(LocalDateTime.now())
                 .build();
 
-        orderService.createOrder(newOrder);
+        orderService.createOrder(newOrderDTO);
         loggerService.logAction(username, ActionType.CREATE_ORDER, "Created order for VIN: " + vinNumber);
     }
 
@@ -110,13 +110,13 @@ public class OrderTerminal implements TerminalAction {
         };
 
         orderService.changeOrderStatus(UUID.fromString(orderId), status);
-        loggerService.logAction(terminal.getCurrentUser().getUsername(),
+        loggerService.logAction(terminal.getCurrentUserDTO().getUsername(),
                 ActionType.CHANGE_ORDER_STATUS,
                 "Order ID " + orderId + " status changed to " + status);
     }
 
     public void viewOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        orders.forEach(System.out::println);
+        List<OrderDTO> orderDTOS = orderService.getAllOrders();
+        orderDTOS.forEach(System.out::println);
     }
 }

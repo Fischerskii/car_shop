@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw1.config.DatabaseConfig;
-import ru.ylab.hw1.dto.LogEntry;
-import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.dto.LogEntryDTO;
+import ru.ylab.hw1.dto.UserDTO;
 import ru.ylab.hw1.repository.impl.LoggerRepositoryImpl;
 import ru.ylab.hw1.service.LoggerService;
 import ru.ylab.hw1.service.impl.LoggerServiceImpl;
@@ -23,7 +23,7 @@ public class Terminal {
 
     @Getter
     @Setter
-    private User currentUser;
+    private UserDTO currentUserDTO;
 
     public Terminal() {
         TerminalFactory terminalFactory = new DefaultTerminalFactory(this, loggerService);
@@ -43,7 +43,7 @@ public class Terminal {
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            if (currentUser == null) {
+            if (currentUserDTO == null) {
                 authTerminal.showAuthMenu(scanner);
             } else {
                 showMainMenu(scanner);
@@ -74,7 +74,7 @@ public class Terminal {
                 authTerminal.viewUsers();
                 break;
             case 4:
-                currentUser = null;
+                currentUserDTO = null;
                 break;
             case 5:
                 viewLogs(scanner);
@@ -96,7 +96,7 @@ public class Terminal {
 //        String actionTypeFilter = scanner.nextLine().trim();
 //        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
 
-        List<LogEntry> logs = loggerService.getLogsByUser(userFilter);
+        List<LogEntryDTO> logs = loggerService.getLogsByUser(userFilter);
         logs.forEach(System.out::println);
     }
 

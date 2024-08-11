@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class LogEntry {
+public class LogEntryDTO {
     private String username;
     private ActionType actionType;
     private String details;
     private LocalDateTime timestamp;
 
-    public LogEntry(String username, ActionType actionType, String details) {
+    public LogEntryDTO(String username, ActionType actionType, String details) {
         this.username = username;
         this.actionType = actionType;
         this.details = details;

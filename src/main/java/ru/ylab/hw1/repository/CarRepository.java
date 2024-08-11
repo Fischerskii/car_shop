@@ -1,18 +1,18 @@
 package ru.ylab.hw1.repository;
 
-import ru.ylab.hw1.dto.Car;
+import ru.ylab.hw1.dto.CarDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CarRepository {
-    Car save(Car car);
+    CarDTO save(CarDTO carDTO);
 
-    void edit(Car car);
+    void edit(CarDTO carDTO);
 
     void delete(String vinNumber);
 
-    List<Car> findAll();
+    List<CarDTO> findAll();
 
-    Optional<Car> findByVin(String vinNumber);
+    Optional<CarDTO> findByVin(String vinNumber);
 }
