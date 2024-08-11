@@ -92,10 +92,6 @@ public class Terminal {
         String userFilter = scanner.nextLine().trim();
         userFilter = userFilter.isEmpty() ? null : userFilter;
 
-        System.out.print("Enter action type to filter by (or leave blank): ");
-//        String actionTypeFilter = scanner.nextLine().trim();
-//        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
-
         List<LogEntryDTO> logs = loggerService.getLogsByUser(userFilter);
         logs.forEach(System.out::println);
     }
@@ -103,14 +99,6 @@ public class Terminal {
     private void exportLogs(Scanner scanner) {
         System.out.print("Enter filename to export logs: ");
         String filename = scanner.nextLine();
-
-        System.out.print("Enter username to filter by (or leave blank): ");
-//        String userFilter = scanner.nextLine().trim();
-//        userFilter = userFilter.isEmpty() ? null : userFilter;
-
-        System.out.print("Enter action type to filter by (or leave blank): ");
-        String actionTypeFilter = scanner.nextLine().trim();
-//        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
 
         loggerService.exportLogsToFile(filename);
         System.out.println("Logs exported to " + filename);
