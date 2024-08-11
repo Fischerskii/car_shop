@@ -53,6 +53,24 @@
             </column>
         </createTable>
 
+        <createTable tableName="logs" schemaName="logs_schema">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="action_type" type="VARCHAR(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="details" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
     </changeSet>
 </databaseChangeLog>
 

@@ -19,6 +19,11 @@
                 sequenceName="user_id_seq"
                 startValue="1"
                 incrementBy="1"/>
+
+        <createSequence
+                sequenceName="log_id_seq"
+                startValue="1"
+                incrementBy="1"/>
     </changeSet>
 
 </databaseChangeLog>
