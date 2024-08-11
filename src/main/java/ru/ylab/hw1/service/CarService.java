@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CarService {
 
-    Car addCar(Car car);
+    void addCar(Car car);
 
     void editCar(Car car);
 
