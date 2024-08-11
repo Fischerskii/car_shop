@@ -1,66 +1,104 @@
 package ru.ylab.hw1.view;
 
-import ru.ylab.hw1.audit.Logger;
-import ru.ylab.hw1.dto.Car;
-import ru.ylab.hw1.dto.User;
+import ru.ylab.hw1.dto.Order;
 import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.OrderStatus;
-import ru.ylab.hw1.repository.CarRepository;
-import ru.ylab.hw1.repository.OrderRepository;
-import ru.ylab.hw1.repository.UserRepository;
 import ru.ylab.hw1.repository.impl.CarRepositoryImpl;
 import ru.ylab.hw1.repository.impl.OrderRepositoryImpl;
-import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
 import ru.ylab.hw1.service.CarService;
+import ru.ylab.hw1.service.LoggerService;
 import ru.ylab.hw1.service.OrderService;
-import ru.ylab.hw1.service.UserService;
 import ru.ylab.hw1.service.impl.CarServiceImpl;
 import ru.ylab.hw1.service.impl.OrderServiceImpl;
-import ru.ylab.hw1.service.impl.UserServiceImpl;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
-public class OrderTerminal {
-    private Terminal terminal;
-    private final CarRepository carRepository = new CarRepositoryImpl();
-    private final OrderRepository orderRepository = new OrderRepositoryImpl();
-    private final UserRepository userRepository = new UserRepositoryImpl();
+public class OrderTerminal implements TerminalAction {
+    private final OrderService orderService;
+    private final CarService carService;
+    private final Terminal terminal;
+    private final LoggerService loggerService;
 
-    private final OrderService orderService = new OrderServiceImpl(orderRepository);
-    private final UserService userService = new UserServiceImpl(userRepository);
-    private final CarService carService = new CarServiceImpl(carRepository);
-    private final CarTerminal carTerminal = new CarTerminal(terminal);
-    private final Logger logger = new Logger();
-
-    public OrderTerminal(Terminal terminal) {
+    public OrderTerminal(Terminal terminal, LoggerService loggerService) {
         this.terminal = terminal;
+        this.orderService = new OrderServiceImpl(new OrderRepositoryImpl());
+        this.carService = new CarServiceImpl(new CarRepositoryImpl());
+        this.loggerService = loggerService;
     }
 
-    protected void createOrder(Scanner scanner) {
-        System.out.print("Enter client username: ");
-        String username = scanner.nextLine();
-        User client = userService.login(username, "");
-
-        if (client != null) {
-            carTerminal.viewCars();
-            System.out.print("Enter index of car to order: ");
-            int carIndex = scanner.nextInt();
+    @Override
+    public void execute(Scanner scanner) {
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("-------------");
+            System.out.println("1. View Orders");
+            System.out.println("2. Create Order");
+            System.out.println("3. Change Order Status");
+            System.out.println("4. Back to Main Menu");
+            System.out.println("-------------");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
             scanner.nextLine();
 
-            Car car = carService.getAllCars().get(carIndex);
-            orderService.createOrder(client, car);
-            logger.log(terminal.getCurrentUser().getUsername(), ActionType.CREATE_ORDER,
-                    "Order from client " + username + " with car " + car + " has been created");
-        } else {
-            System.out.println("Client not found.");
+            switch (choice) {
+                case 1 -> viewOrders();
+                case 2 -> createOrder(scanner);
+                case 3 -> changeOrderStatus(scanner);
+                case 4 -> exit = true;
+                default -> System.out.println("Invalid choice, please try again.");
+            }
         }
     }
 
-    protected void changeOrderStatus(Scanner scanner) {
+    public void createOrder(Scanner scanner) {
+        String vinNumber = "";
+        boolean validVin = false;
+
+        while (!validVin) {
+            System.out.print("Enter car VIN number: ");
+            vinNumber = scanner.nextLine();
+
+            if (carService.getCar(vinNumber).isPresent()) {
+                validVin = true;
+            } else {
+                System.out.println("Car with VIN number " + vinNumber + " does not exist. Please try again.");
+            }
+        }
+
+        String username = terminal.getCurrentUser().getUsername();
+
+        Order newOrder = Order.builder()
+                .id(UUID.randomUUID())
+                .userName(username)
+                .carVinNumber(vinNumber)
+                .status(OrderStatus.PENDING)
+                .orderCreationDate(LocalDateTime.now())
+                .build();
+
+        orderService.createOrder(newOrder);
+        loggerService.logAction(username, ActionType.CREATE_ORDER, "Created order for VIN: " + vinNumber);
+    }
+
+    public void changeOrderStatus(Scanner scanner) {
         viewOrders();
-        System.out.print("Enter order ID to change status: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+
+        String orderId = "";
+        boolean validOrderId = false;
+
+        while (!validOrderId) {
+            System.out.print("Enter order ID: ");
+            orderId = scanner.nextLine();
+
+            if (orderService.getOrderById(UUID.fromString(orderId)).isPresent()) {
+                validOrderId = true;
+            } else {
+                System.out.println("Order with ID " + orderId + " does not exist. Please try again.");
+            }
+        }
+
         System.out.print("Enter new status (1. PENDING, 2. COMPLETED, 3. CANCELLED): ");
         int statusChoice = scanner.nextInt();
         scanner.nextLine();
@@ -71,13 +109,14 @@ public class OrderTerminal {
             default -> throw new IllegalArgumentException("Invalid status");
         };
 
-        orderService.changeOrderStatus(id, status);
-        String currentUser = terminal.getCurrentUser().getUsername();
-        logger.log(currentUser, ActionType.CHANGE_ORDER_STATUS,
-                "Order from client " + currentUser + " with id " + id + " has been changed");
+        orderService.changeOrderStatus(UUID.fromString(orderId), status);
+        loggerService.logAction(terminal.getCurrentUser().getUsername(),
+                ActionType.CHANGE_ORDER_STATUS,
+                "Order ID " + orderId + " status changed to " + status);
     }
 
-    protected void viewOrders() {
-        orderService.getAllOrders();
+    public void viewOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        orders.forEach(System.out::println);
     }
 }

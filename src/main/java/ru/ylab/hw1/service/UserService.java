@@ -3,7 +3,7 @@ package ru.ylab.hw1.service;
 import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.Role;
 
-import java.util.Map;
+import java.util.List;
 
 public interface UserService {
 
@@ -11,5 +11,5 @@ public interface UserService {
 
     User login(String username, String password);
 
-    Map<String, User> viewUsers();
+    List<User> viewUsers();
 }

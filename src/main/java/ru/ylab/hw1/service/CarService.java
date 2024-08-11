@@ -3,14 +3,17 @@ package ru.ylab.hw1.service;
 import ru.ylab.hw1.dto.Car;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CarService {
 
     Car addCar(Car car);
 
-    void editCar(int index, Car updatedCar);
+    void editCar(Car car);
 
-    void deleteCar(int index);
+    void deleteCar(String vinNumber);
 
     List<Car> getAllCars();
+
+    Optional<Car> getCar(String vinNumber);
 }

@@ -7,5 +7,4 @@ public interface TerminalFactory {
 
     OrderTerminal createOrderTerminal();
 
-    RequestTerminal createRequestTerminal();
 }

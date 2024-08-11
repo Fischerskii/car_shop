@@ -1,17 +1,19 @@
 package ru.ylab.hw1.service;
 
-import ru.ylab.hw1.dto.Car;
 import ru.ylab.hw1.dto.Order;
-import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.OrderStatus;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface OrderService {
 
-    void createOrder(User client, Car car);
+    void createOrder(Order order);
 
-    void changeOrderStatus(int id, OrderStatus status);
+    void changeOrderStatus(UUID id, OrderStatus status);
 
-    Map<Integer, Order> getAllOrders();
+    Optional<Order> getOrderById(UUID id);
+
+    List<Order> getAllOrders();
 }

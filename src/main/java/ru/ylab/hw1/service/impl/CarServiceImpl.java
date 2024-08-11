@@ -6,6 +6,7 @@ import ru.ylab.hw1.service.CarService;
 import ru.ylab.hw1.dto.Car;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class CarServiceImpl implements CarService {
@@ -15,23 +16,28 @@ public class CarServiceImpl implements CarService {
         this.carRepository = carRepository;
     }
 
+    @Override
     public Car addCar(Car car) {
-        Car savedCar = carRepository.save(car);
-        log.info("Car added: {}", car);
-        return savedCar;
+        return carRepository.save(car);
     }
 
-    public void editCar(int vinNumber, Car updatedCar) {
-        carRepository.edit(vinNumber, updatedCar);
-        log.info("Car: {} updated", updatedCar);
+    @Override
+    public void editCar(Car car) {
+        carRepository.edit(car);
     }
 
-    public void deleteCar(int index) {
-        carRepository.delete(index);
-        log.info("Car: {} deleted", index);
+    @Override
+    public void deleteCar(String vinNumber) {
+        carRepository.delete(vinNumber);
     }
 
+    @Override
     public List<Car> getAllCars() {
         return carRepository.findAll();
+    }
+
+    @Override
+    public Optional<Car> getCar(String vinNumber) {
+        return carRepository.findByVin(vinNumber);
     }
 }

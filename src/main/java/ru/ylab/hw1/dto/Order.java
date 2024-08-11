@@ -1,22 +1,18 @@
 package ru.ylab.hw1.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import ru.ylab.hw1.enums.OrderStatus;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
+@Builder
 @Data
 public class Order {
-    private int id;
-    private User client;
-    private Car car;
+    private UUID id;
+    private String userName;
+    private String carVinNumber;
     private OrderStatus status;
-    private Date orderDate;
-
-    public Order(User client, Car car) {
-        this.client = client;
-        this.car = car;
-        this.status = OrderStatus.PENDING;
-        this.orderDate = new Date();
-    }
+    private LocalDateTime orderCreationDate;
 }

@@ -2,60 +2,52 @@ package ru.ylab.hw1.view;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.ylab.hw1.audit.Logger;
+import lombok.extern.slf4j.Slf4j;
+import ru.ylab.hw1.config.DatabaseConfig;
+import ru.ylab.hw1.dto.LogEntry;
 import ru.ylab.hw1.dto.User;
-import ru.ylab.hw1.enums.ActionType;
+import ru.ylab.hw1.repository.impl.LoggerRepositoryImpl;
+import ru.ylab.hw1.service.LoggerService;
+import ru.ylab.hw1.service.impl.LoggerServiceImpl;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
+@Slf4j
 public class Terminal {
     private final AuthTerminal authTerminal;
     private final CarTerminal carTerminal;
     private final OrderTerminal orderTerminal;
-    private final RequestTerminal requestTerminal;
+    private LoggerService loggerService;
 
     @Getter
     @Setter
     private User currentUser;
-    private final Logger logger = new Logger();
 
     public Terminal() {
-        TerminalFactory terminalFactory = new DefaultTerminalFactory(this);
+        TerminalFactory terminalFactory = new DefaultTerminalFactory(this, loggerService);
         this.authTerminal = terminalFactory.createAuthTerminal();
         this.carTerminal = terminalFactory.createCarTerminal();
         this.orderTerminal = terminalFactory.createOrderTerminal();
-        this.requestTerminal = terminalFactory.createRequestTerminal();
+    }
+
+    {
+        try {
+            this.loggerService = new LoggerServiceImpl(new LoggerRepositoryImpl(DatabaseConfig.getConnection()));
+        } catch (SQLException e) {
+            log.error("Can't connect to database", e);
+        }
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             if (currentUser == null) {
-                showLoginMenu(scanner);
+                authTerminal.showAuthMenu(scanner);
             } else {
                 showMainMenu(scanner);
             }
-        }
-    }
-
-    private void showLoginMenu(Scanner scanner) {
-        System.out.println("-------------");
-        System.out.println("1. Register");
-        System.out.println("2. Login");
-        System.out.println("-------------\n");
-        System.out.print("Enter your choice: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                authTerminal.registerUser(scanner);
-                break;
-            case 2:
-                authTerminal.loginUser(scanner);
-                break;
-            default:
-                System.out.println("Invalid choice, please try again.");
         }
     }
 
@@ -63,106 +55,32 @@ public class Terminal {
         System.out.println("---------------------------");
         System.out.println("1. Manage Cars");
         System.out.println("2. Manage Orders");
-        System.out.println("3. Manage Service Requests");
-        System.out.println("4. View Users");
-        System.out.println("5. Logout");
-        System.out.println("6. View Logs");
-        System.out.println("7. Export Logs");
+        System.out.println("3. View Users");
+        System.out.println("4. Logout");
+        System.out.println("5. View Logs");
+        System.out.println("6. Export Logs");
         System.out.println("---------------------------");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
             case 1:
-                showCarsMenu(scanner);
+                carTerminal.execute(scanner);
                 break;
             case 2:
-                showOrdersMenu(scanner);
+                orderTerminal.execute(scanner);
                 break;
             case 3:
-                showRequestMenu(scanner);
-                break;
-            case 4:
                 authTerminal.viewUsers();
                 break;
-            case 5:
+            case 4:
                 currentUser = null;
                 break;
-            case 6:
+            case 5:
                 viewLogs(scanner);
                 break;
-            case 7:
+            case 6:
                 exportLogs(scanner);
-                break;
-            default:
-                System.out.println("Invalid choice, please try again.");
-        }
-    }
-
-    private void showCarsMenu(Scanner scanner) {
-        System.out.println("1. View Cars");
-        System.out.println("2. Add Car");
-        System.out.println("3. Edit Car");
-        System.out.println("4. Delete Car");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                carTerminal.viewCars();
-                break;
-            case 2:
-                carTerminal.addCar(scanner);
-                break;
-            case 3:
-                carTerminal.editCar(scanner);
-                break;
-            case 4:
-                carTerminal.deleteCar(scanner);
-                break;
-            default:
-                System.out.println("Invalid choice, please try again.");
-        }
-    }
-
-    private void showOrdersMenu(Scanner scanner) {
-        System.out.println("1. View Orders");
-        System.out.println("2. Create Order");
-        System.out.println("3. Change Order Status");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                orderTerminal.viewOrders();
-                break;
-            case 2:
-                orderTerminal.createOrder(scanner);
-                break;
-            case 3:
-                orderTerminal.changeOrderStatus(scanner);
-                break;
-            default:
-                System.out.println("Invalid choice, please try again.");
-        }
-    }
-
-    private void showRequestMenu(Scanner scanner) {
-        System.out.println("1. View Service Requests");
-        System.out.println("2. Create Service Request");
-        System.out.println("3. Change Service Request Status");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                requestTerminal.viewServiceRequests();
-                break;
-            case 2:
-                requestTerminal.createServiceRequest(scanner);
-                break;
-            case 3:
-                requestTerminal.changeServiceRequestStatus(scanner);
                 break;
             default:
                 System.out.println("Invalid choice, please try again.");
@@ -175,10 +93,11 @@ public class Terminal {
         userFilter = userFilter.isEmpty() ? null : userFilter;
 
         System.out.print("Enter action type to filter by (or leave blank): ");
-        String actionTypeFilter = scanner.nextLine().trim();
-        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
+//        String actionTypeFilter = scanner.nextLine().trim();
+//        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
 
-        logger.viewLogs(userFilter, actionType, null, null);
+        List<LogEntry> logs = loggerService.getLogsByUser(userFilter);
+        logs.forEach(System.out::println);
     }
 
     private void exportLogs(Scanner scanner) {
@@ -186,14 +105,14 @@ public class Terminal {
         String filename = scanner.nextLine();
 
         System.out.print("Enter username to filter by (or leave blank): ");
-        String userFilter = scanner.nextLine().trim();
-        userFilter = userFilter.isEmpty() ? null : userFilter;
+//        String userFilter = scanner.nextLine().trim();
+//        userFilter = userFilter.isEmpty() ? null : userFilter;
 
         System.out.print("Enter action type to filter by (or leave blank): ");
         String actionTypeFilter = scanner.nextLine().trim();
-        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
+//        ActionType actionType = actionTypeFilter.isEmpty() ? null : ActionType.valueOf(actionTypeFilter.toUpperCase());
 
-        logger.exportLogs(filename, userFilter, actionType, null, null);
+        loggerService.exportLogsToFile(filename);
         System.out.println("Logs exported to " + filename);
     }
 }
