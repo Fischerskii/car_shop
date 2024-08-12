@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -50,12 +49,9 @@ public class LiquibaseRunner {
      * @throws RuntimeException if a database connection or Liquibase operation fails.
      */
     public void runLiquibaseUpdate() {
-        String url = properties.getProperty("db.url");
-        String username = properties.getProperty("db.username");
-        String password = properties.getProperty("db.password");
         String changelogFile = properties.getProperty("liquibase.changelog");
 
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+        try (Connection connection = DatabaseConfig.getConnection()) {
             Database database = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
             Liquibase liquibase = new Liquibase(changelogFile, new ClassLoaderResourceAccessor(), database);

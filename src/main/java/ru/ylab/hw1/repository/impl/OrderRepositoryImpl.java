@@ -26,7 +26,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      */
     @Override
     public void save(Order order) {
-        String query = "INSERT INTO order (id, user_name, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO order (id, username, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
 
         Connection connection = null;
         try {
@@ -99,7 +99,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      * @return a list of all orders
      */
     public List<Order> findAll() {
-        String query = "SELECT id, user_name, car_vin_number, status, order_creation_date FROM order";
+        String query = "SELECT id, username, car_vin_number, status, order_creation_date FROM order";
         List<Order> orders = new ArrayList<>();
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -155,7 +155,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      */
     private Order mapRowToOrder(ResultSet resultSet) throws SQLException {
         String id = resultSet.getString("id");
-        String userName = resultSet.getString("user_name");
+        String userName = resultSet.getString("username");
         String carVinNumber = resultSet.getString("car_vin_number");
         OrderStatus status = OrderStatus.valueOf(resultSet.getString("status"));
         LocalDateTime orderCreationDate = resultSet.getTimestamp("order_creation_date").toLocalDateTime();

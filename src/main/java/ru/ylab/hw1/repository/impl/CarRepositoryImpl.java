@@ -31,7 +31,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @throws DataAccessException if there is an error accessing the database
      */
     public Car save(Car car) {
-        String sql = "INSERT INTO car (brand, model, year, price, condition) VALUES (?, ?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO car (car_vin_number, brand, model, year, price, condition) VALUES (?, ?, ?, ?, ?, ?) RETURNING car_vin_number";
 
         Connection connection = null;
         try {
@@ -43,7 +43,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
 
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
-                    String vin = resultSet.getString("vin");
+                    String vin = resultSet.getString("car_vin_number");
                     car.setVinNumber(vin);
                     log.info("Car with VIN {} has been saved", vin);
                 }
@@ -71,7 +71,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @throws DataAccessException if there is an error accessing the database
      */
     public void edit(Car car) {
-        String sql = "UPDATE cars SET brand = ?, model = ?, year = ?, price = ?, condition = ? WHERE id = ?";
+        String sql = "UPDATE car SET brand = ?, model = ?, year = ?, price = ?, condition = ? WHERE car_vin_number = ?";
 
         Connection connection = null;
 
@@ -152,7 +152,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
 
             while (resultSet.next()) {
                 Car car = new Car();
-                car.setVinNumber(resultSet.getString("vin"));
+                car.setVinNumber(resultSet.getString("car_vin_number"));
                 car.setBrand(resultSet.getString("brand"));
                 car.setModel(resultSet.getString("model"));
                 car.setYear(resultSet.getInt("year"));
@@ -174,7 +174,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @return an {@link Optional} containing the car if found, or an empty {@link Optional} if not
      */
     public Optional<Car> findByVin(String vinNumber) {
-        String sql = "SELECT id, brand, model, year, price, condition FROM car WHERE vin = ?";
+        String sql = "SELECT brand, model, year, price, condition FROM car WHERE car_vin_number = ?";
 
         try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

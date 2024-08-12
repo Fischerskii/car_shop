@@ -6,12 +6,12 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="1" author="Pavel Trofimov">
-        <insert tableName="user">
+        <insert schemaName="entity_schema" tableName="user">
             <column name="username" value="admin"/>
             <column name="password" value="admin_pass"/>
             <column name="role" value="ADMIN"/>
         </insert>
-        <insert tableName="user">
+        <insert schemaName="entity_schema" tableName="user">
             <column name="username" value="user"/>
             <column name="password" value="user_pass"/>
             <column name="role" value="USER"/>
@@ -19,16 +19,16 @@
     </changeSet>
 
     <changeSet id="2" author="Pavel Trofimov">
-        <insert tableName="car">
-            <column name="vin" value="1HGCM82633A004352"/>
+        <insert schemaName="entity_schema" tableName="car">
+            <column name="car_vin_number" value="1HGCM82633A004352"/>
             <column name="brand" value="Honda"/>
             <column name="model" value="Accord"/>
             <column name="year" value="2003"/>
             <column name="price" value="5000"/>
             <column name="condition" value="USED"/>
         </insert>
-        <insert tableName="car">
-            <column name="vin" value="JHMCM56557C404453"/>
+        <insert schemaName="entity_schema" tableName="car">
+            <column name="car_vin_number" value="JHMCM56557C404453"/>
             <column name="brand" value="Honda"/>
             <column name="model" value="Civic"/>
             <column name="year" value="2007"/>
@@ -38,16 +38,16 @@
     </changeSet>
 
     <changeSet id="3" author="Pavel Trofimov">
-        <insert tableName="order">
-            <column name="id" value="1"/>
-            <column name="user_name" value="admin"/>
+        <insert schemaName="entity_schema" tableName="order">
+            <column name="id" value="7836a9eb-c08f-497a-9c79-9c680d5a6e60"/>
+            <column name="username" value="admin"/>
             <column name="car_vin_number" value="1HGCM82633A004352"/>
             <column name="status" value="COMPLETED"/>
             <column name="order_creation_date" value="2023-01-01 12:00:00"/>
         </insert>
-        <insert tableName="order">
-            <column name="id" value="2"/>
-            <column name="user_name" value="user"/>
+        <insert schemaName="entity_schema" tableName="order">
+            <column name="id" value="2d6646bc-cbc8-4485-b811-4d8a1ace1ece"/>
+            <column name="username" value="user"/>
             <column name="car_vin_number" value="JHMCM56557C404453"/>
             <column name="status" value="PENDING"/>
             <column name="order_creation_date" value="2023-01-02 15:00:00"/>

@@ -5,12 +5,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="db/changelog/000-create-schema.xml"/>
-
-    <include file="/db/changelog/001-create-sequences.xml"/>
-
-    <include file="/db/changelog/002-create-tables.xml"/>
-
-    <include file="db/changelog/003-insert-data.xml"/>
+    <changeSet id="000-create-schema" author="Pavel Trofimov">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS service_schema;
+            CREATE SCHEMA IF NOT EXISTS entity_schema;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
