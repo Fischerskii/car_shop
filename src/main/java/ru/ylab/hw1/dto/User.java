@@ -6,7 +6,7 @@ import ru.ylab.hw1.enums.Role;
 
 @Data
 @AllArgsConstructor
-public class UserDTO {
+public class User {
     private String username;
     private String password;
     private Role role;

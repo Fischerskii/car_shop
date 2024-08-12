@@ -1,6 +1,6 @@
 package ru.ylab.hw1.service;
 
-import ru.ylab.hw1.dto.LogEntryDTO;
+import ru.ylab.hw1.dto.LogEntry;
 import ru.ylab.hw1.enums.ActionType;
 
 import java.time.LocalDate;
@@ -10,11 +10,11 @@ public interface LoggerService {
 
     void logAction(String username, ActionType actionType, String details);
 
-    List<LogEntryDTO> getLogsByUser(String username);
+    List<LogEntry> getLogsByUser(String username);
 
-    List<LogEntryDTO> getLogsByDate(LocalDate date);
+    List<LogEntry> getLogsByDate(LocalDate date);
 
-    List<LogEntryDTO> getLogsByAction(ActionType actionType);
+    List<LogEntry> getLogsByAction(ActionType actionType);
 
     void exportLogsToFile(String filePath);
 }

@@ -15,10 +15,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * A utility class responsible for running Liquibase database migrations.
+ * <p>
+ * The class loads the necessary database configuration from a properties file and executes Liquibase updates.
+ */
 @Slf4j
 public class LiquibaseRunner {
     private final Properties properties;
 
+    /**
+     * Initializes a new instance of the {@code LiquibaseRunner} class.
+     * <p>
+     * Loads the database and Liquibase configuration properties from the specified properties file.
+     *
+     * @throws RuntimeException if the properties file cannot be loaded.
+     */
     public LiquibaseRunner() {
         properties = new Properties();
         String propertiesFilePath = "src/main/resources/application.properties";
@@ -30,6 +42,13 @@ public class LiquibaseRunner {
         }
     }
 
+    /**
+     * Executes Liquibase update to apply changes to the database schema.
+     * <p>
+     * Establishes a database connection using the properties loaded in the constructor and runs the Liquibase update.
+     *
+     * @throws RuntimeException if a database connection or Liquibase operation fails.
+     */
     public void runLiquibaseUpdate() {
         String url = properties.getProperty("db.url");
         String username = properties.getProperty("db.username");

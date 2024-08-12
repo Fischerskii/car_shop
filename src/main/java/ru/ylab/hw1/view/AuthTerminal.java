@@ -1,7 +1,7 @@
 package ru.ylab.hw1.view;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.ylab.hw1.dto.UserDTO;
+import ru.ylab.hw1.dto.User;
 import ru.ylab.hw1.enums.ActionType;
 import ru.ylab.hw1.enums.Role;
 import ru.ylab.hw1.repository.impl.UserRepositoryImpl;
@@ -49,16 +49,22 @@ public class AuthTerminal implements TerminalAction{
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
-        System.out.print("Enter role (1. ADMIN, 2. MANAGER, 3. CLIENT): ");
-        int roleChoice = scanner.nextInt();
-        scanner.nextLine();
+        Role role = null;
+        while (role == null) {
+            System.out.print("Enter role (1. ADMIN, 2. MANAGER, 3. CLIENT): ");
+            int roleChoice = scanner.nextInt();
+            scanner.nextLine();
 
-        Role role = switch (roleChoice) {
-            case 1 -> Role.ADMIN;
-            case 2 -> Role.MANAGER;
-            case 3 -> Role.CLIENT;
-            default -> throw new IllegalArgumentException("Invalid role");
-        };
+            role = switch (roleChoice) {
+                case 1 -> Role.ADMIN;
+                case 2 -> Role.MANAGER;
+                case 3 -> Role.CLIENT;
+                default -> {
+                    System.out.println("Invalid role, please try again.");
+                    yield null;
+                }
+            };
+        }
 
         userService.register(username, password, role);
         loggerService.logAction(username, ActionType.REGISTER, "User " + username + " registered.");
@@ -70,9 +76,9 @@ public class AuthTerminal implements TerminalAction{
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        UserDTO userDTO = userService.login(username, password);
-        if (userDTO != null) {
-            terminal.setCurrentUserDTO(userDTO);
+        User user = userService.login(username, password);
+        if (user != null) {
+            terminal.setCurrentUser(user);
             loggerService.logAction(username, ActionType.LOGIN, "User " + username + " logged in.");
         } else {
             System.out.println("Invalid credentials, please try again.");

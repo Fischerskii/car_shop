@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarDTO {
+public class Car {
     private String vinNumber;
     private String brand;
     private String model;

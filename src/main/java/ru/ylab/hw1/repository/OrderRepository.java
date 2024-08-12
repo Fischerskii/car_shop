@@ -1,6 +1,6 @@
 package ru.ylab.hw1.repository;
 
-import ru.ylab.hw1.dto.OrderDTO;
+import ru.ylab.hw1.dto.Order;
 import ru.ylab.hw1.enums.OrderStatus;
 
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.UUID;
 
 public interface OrderRepository {
 
-    void save(OrderDTO orderDTO);
+    void save(Order order);
 
     void edit(UUID id, OrderStatus orderNewStatus);
 
-    List<OrderDTO> findAll();
+    List<Order> findAll();
 
-    Optional<OrderDTO> findById(UUID id);
+    Optional<Order> findById(UUID id);
 }
