@@ -25,7 +25,7 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
      */
     @Override
     public void save(User user) {
-        String query = "INSERT INTO user (username, password, role) VALUES (?, ?, ?)";
+        String query = "INSERT INTO entity_schema.user (username, password, role) VALUES (?, ?, ?)";
         Connection connection = null;
 
         try {
@@ -57,7 +57,7 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
      */
     @Override
     public void update(User user) {
-        String query = "UPDATE user SET password = ?, role = ? WHERE username = ?";
+        String query = "UPDATE entity_schema.user SET password = ?, role = ? WHERE username = ?";
         Connection connection = null;
 
         try {
@@ -89,7 +89,7 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
      */
     @Override
     public void delete(String username) {
-        String query = "DELETE FROM user WHERE username = ?";
+        String query = "DELETE FROM entity_schema.user WHERE username = ?";
         Connection connection = null;
 
         try {
@@ -119,7 +119,7 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
      */
     @Override
     public User getUserByUsername(String username) {
-        String query = "SELECT * FROM user WHERE username = ?";
+        String query = "SELECT * FROM entity_schema.user WHERE username = ?";
         User user = null;
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -127,10 +127,11 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                Role role = Role.valueOf(resultSet.getString("role").toUpperCase().trim());
                 user = new User(
                         resultSet.getString("username"),
                         resultSet.getString("password"),
-                        Role.valueOf(resultSet.getString("role"))
+                        role
                 );
             }
         } catch (SQLException e) {
@@ -147,7 +148,7 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
      */
     @Override
     public List<User> getAllUsers() {
-        String query = "SELECT * FROM user";
+        String query = "SELECT * FROM entity_schema.user";
         List<User> users = new ArrayList<>();
 
         try (Connection connection = DatabaseConfig.getConnection();

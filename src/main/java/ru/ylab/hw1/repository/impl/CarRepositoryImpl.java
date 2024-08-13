@@ -31,7 +31,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @throws DataAccessException if there is an error accessing the database
      */
     public Car save(Car car) {
-        String sql = "INSERT INTO car (car_vin_number, brand, model, year, price, condition) VALUES (?, ?, ?, ?, ?, ?) RETURNING car_vin_number";
+        String sql = "INSERT INTO entity_schema.car (car_vin_number, brand, model, year, price, condition) VALUES (?, ?, ?, ?, ?, ?) RETURNING car_vin_number";
 
         Connection connection = null;
         try {
@@ -71,7 +71,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @throws DataAccessException if there is an error accessing the database
      */
     public void edit(Car car) {
-        String sql = "UPDATE car SET brand = ?, model = ?, year = ?, price = ?, condition = ? WHERE car_vin_number = ?";
+        String sql = "UPDATE entity_schema.car SET brand = ?, model = ?, year = ?, price = ?, condition = ? WHERE car_vin_number = ?";
 
         Connection connection = null;
 
@@ -111,7 +111,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @throws DataAccessException if there is an error accessing the database
      */
     public void delete(String vinNumber) {
-        String sql = "DELETE FROM cars WHERE id = ?";
+        String sql = "DELETE FROM entity_schema.car WHERE id = ?";
 
         Connection connection = null;
 
@@ -144,7 +144,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      */
     public List<Car> findAll() {
         List<Car> cars = new ArrayList<>();
-        String sql = "SELECT * FROM cars";
+        String sql = "SELECT * FROM entity_schema.car";
 
         try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -174,7 +174,7 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
      * @return an {@link Optional} containing the car if found, or an empty {@link Optional} if not
      */
     public Optional<Car> findByVin(String vinNumber) {
-        String sql = "SELECT brand, model, year, price, condition FROM car WHERE car_vin_number = ?";
+        String sql = "SELECT brand, model, year, price, condition FROM entity_schema.car WHERE car_vin_number = ?";
 
         try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

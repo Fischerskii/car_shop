@@ -26,7 +26,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      */
     @Override
     public void save(Order order) {
-        String query = "INSERT INTO order (id, username, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO entity_schema.order (id, username, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
 
         Connection connection = null;
         try {
@@ -63,7 +63,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      */
     @Override
     public void edit(UUID id, OrderStatus orderNewStatus) {
-        String query = "UPDATE order SET status = ? WHERE id = ?";
+        String query = "UPDATE entity_schema.order SET status = ? WHERE id = ?";
 
         Connection connection = null;
         try {
@@ -99,7 +99,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      * @return a list of all orders
      */
     public List<Order> findAll() {
-        String query = "SELECT id, username, car_vin_number, status, order_creation_date FROM order";
+        String query = "SELECT id, username, car_vin_number, status, order_creation_date FROM entity_schema.order";
         List<Order> orders = new ArrayList<>();
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -126,7 +126,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
      */
     @Override
     public Optional<Order> findById(UUID id) {
-        String query = "SELECT * FROM order WHERE id = ?";
+        String query = "SELECT * FROM entity_schema.order WHERE id = ?";
 
         Order order = null;
         try (Connection connection = DatabaseConfig.getConnection();

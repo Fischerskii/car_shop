@@ -33,7 +33,7 @@ public class LoggerRepositoryImpl implements LoggerRepository {
      */
     @Override
     public void save(LogEntry logEntry) {
-        String sql = "INSERT INTO logs (username, action_type, details, timestamp) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO service_schema.logs (username, action_type, details, timestamp) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, logEntry.getUsername());
             pstmt.setString(2, logEntry.getActionType().name());
@@ -54,8 +54,8 @@ public class LoggerRepositoryImpl implements LoggerRepository {
      */
     @Override
     public List<LogEntry> findByUsername(String username) {
-        String sql = "SELECT * FROM logs WHERE username = ?";
-        return findLogsByCriteria(sql, username);
+        String query = "SELECT * FROM logs WHERE username = ?";
+        return findLogsByCriteria(query, username);
     }
 
     /**
@@ -66,8 +66,8 @@ public class LoggerRepositoryImpl implements LoggerRepository {
      */
     @Override
     public List<LogEntry> findByDate(LocalDate date) {
-        String sql = "SELECT * FROM logs WHERE DATE(timestamp) = ?";
-        return findLogsByCriteria(sql, date.toString());
+        String query = "SELECT * FROM service_schema.logs WHERE DATE(timestamp) = ?";
+        return findLogsByCriteria(query, date.toString());
     }
 
     /**
@@ -78,8 +78,8 @@ public class LoggerRepositoryImpl implements LoggerRepository {
      */
     @Override
     public List<LogEntry> findByActionType(ActionType actionType) {
-        String sql = "SELECT * FROM logs WHERE action_type = ?";
-        return findLogsByCriteria(sql, actionType.name());
+        String query = "SELECT * FROM logs WHERE action_type = ?";
+        return findLogsByCriteria(query, actionType.name());
     }
 
     /**
@@ -89,7 +89,7 @@ public class LoggerRepositoryImpl implements LoggerRepository {
      */
     @Override
     public List<LogEntry> findAll() {
-        String sql = "SELECT * FROM logs";
+        String sql = "SELECT * FROM service_schema.logs";
         List<LogEntry> logs = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -106,14 +106,14 @@ public class LoggerRepositoryImpl implements LoggerRepository {
     /**
      * Finds log entries based on a given SQL query and criteria.
      *
-     * @param sql      the SQL query to be executed
+     * @param query      the SQL query to be executed
      * @param criteria the criteria to filter logs by
      * @return a list of log entries matching the criteria
      */
     @Override
-    public List<LogEntry> findLogsByCriteria(String sql, String criteria) {
+    public List<LogEntry> findLogsByCriteria(String query, String criteria) {
         List<LogEntry> logs = new ArrayList<>();
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, criteria);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {

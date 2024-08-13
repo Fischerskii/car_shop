@@ -14,7 +14,7 @@
         <insert schemaName="entity_schema" tableName="user">
             <column name="username" value="user"/>
             <column name="password" value="user_pass"/>
-            <column name="role" value="USER"/>
+            <column name="role" value="CLIENT"/>
         </insert>
     </changeSet>
 
