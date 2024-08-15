@@ -11,18 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Implementation of the {@link UserRepository} interface for managing users in the database.
- */
 public class UserRepositoryImpl extends AbstractRepository implements UserRepository {
 
-    /**
-     * Saves the specified user to the database.
-     * If an error occurs during the operation, the transaction is rolled back.
-     *
-     * @param user the user to be saved
-     * @throws DataAccessException if an error occurs during the database operation
-     */
     @Override
     public void save(User user) {
         String query = "INSERT INTO entity_schema.user (username, password, role) VALUES (?, ?, ?)";
@@ -48,13 +38,6 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
         }
     }
 
-    /**
-     * Updates the details of an existing user in the database.
-     * If an error occurs during the operation, the transaction is rolled back.
-     *
-     * @param user the user with updated details
-     * @throws DataAccessException if an error occurs during the database operation
-     */
     @Override
     public void update(User user) {
         String query = "UPDATE entity_schema.user SET password = ?, role = ? WHERE username = ?";
@@ -80,13 +63,6 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
         }
     }
 
-    /**
-     * Deletes a user from the database by username.
-     * If an error occurs during the operation, the transaction is rolled back.
-     *
-     * @param username the username of the user to be deleted
-     * @throws DataAccessException if an error occurs during the database operation
-     */
     @Override
     public void delete(String username) {
         String query = "DELETE FROM entity_schema.user WHERE username = ?";
@@ -110,13 +86,6 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
         }
     }
 
-    /**
-     * Retrieves a user by username from the database.
-     *
-     * @param username the username of the user to be retrieved
-     * @return the user corresponding to the given username, or {@code null} if not found
-     * @throws DataAccessException if an error occurs during the database operation
-     */
     @Override
     public User getUserByUsername(String username) {
         String query = "SELECT * FROM entity_schema.user WHERE username = ?";
@@ -140,12 +109,6 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
         return user;
     }
 
-    /**
-     * Retrieves all users from the database.
-     *
-     * @return a list of all users in the database
-     * @throws DataAccessException if an error occurs during the database operation
-     */
     @Override
     public List<User> getAllUsers() {
         String query = "SELECT * FROM entity_schema.user";

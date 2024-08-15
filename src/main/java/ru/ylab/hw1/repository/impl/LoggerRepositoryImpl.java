@@ -11,26 +11,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Implementation of the {@link LoggerRepository} interface for managing log entries in the database.
- */
 @Slf4j
 public class LoggerRepositoryImpl implements LoggerRepository {
 
     private final Connection connection;
 
-    /**
-     * @param connection the database connection to be used by this repository
-     */
     public LoggerRepositoryImpl(Connection connection) {
         this.connection = connection;
     }
 
-    /**
-     * Saves a log entry to the database.
-     *
-     * @param logEntry the log entry to be saved
-     */
     @Override
     public void save(LogEntry logEntry) {
         String sql = "INSERT INTO service_schema.logs (username, action_type, details, timestamp) VALUES (?, ?, ?, ?)";
@@ -46,47 +35,24 @@ public class LoggerRepositoryImpl implements LoggerRepository {
         }
     }
 
-    /**
-     * Retrieves a list of log entries by username.
-     *
-     * @param username the username to filter logs by
-     * @return a list of log entries associated with the specified username
-     */
     @Override
     public List<LogEntry> findByUsername(String username) {
         String query = "SELECT * FROM logs WHERE username = ?";
         return findLogsByCriteria(query, username);
     }
 
-    /**
-     * Retrieves a list of log entries by date.
-     *
-     * @param date the date to filter logs by
-     * @return a list of log entries from the specified date
-     */
     @Override
     public List<LogEntry> findByDate(LocalDate date) {
         String query = "SELECT * FROM service_schema.logs WHERE DATE(timestamp) = ?";
         return findLogsByCriteria(query, date.toString());
     }
 
-    /**
-     * Retrieves a list of log entries by action type.
-     *
-     * @param actionType the action type to filter logs by
-     * @return a list of log entries with the specified action type
-     */
     @Override
     public List<LogEntry> findByActionType(ActionType actionType) {
         String query = "SELECT * FROM logs WHERE action_type = ?";
         return findLogsByCriteria(query, actionType.name());
     }
 
-    /**
-     * Retrieves all log entries from the database.
-     *
-     * @return a list of all log entries
-     */
     @Override
     public List<LogEntry> findAll() {
         String sql = "SELECT * FROM service_schema.logs";
@@ -103,13 +69,6 @@ public class LoggerRepositoryImpl implements LoggerRepository {
         return logs;
     }
 
-    /**
-     * Finds log entries based on a given SQL query and criteria.
-     *
-     * @param query      the SQL query to be executed
-     * @param criteria the criteria to filter logs by
-     * @return a list of log entries matching the criteria
-     */
     @Override
     public List<LogEntry> findLogsByCriteria(String query, String criteria) {
         List<LogEntry> logs = new ArrayList<>();

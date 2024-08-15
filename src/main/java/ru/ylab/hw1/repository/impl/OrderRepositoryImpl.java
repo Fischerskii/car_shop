@@ -12,18 +12,9 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/**
- * Implementation of the {@link OrderRepository} interface for managing orders in the database.
- */
 @Slf4j
 public class OrderRepositoryImpl extends AbstractRepository implements OrderRepository {
 
-    /**
-     * Saves the specified order to the database.
-     * If an error occurs during the operation, the transaction is rolled back.
-     *
-     * @param order the order to be saved
-     */
     @Override
     public void save(Order order) {
         String query = "INSERT INTO entity_schema.order (id, username, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
@@ -54,13 +45,6 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
         }
     }
 
-    /**
-     * Updates the status of an order with the specified id.
-     * If an error occurs during the operation, the transaction is rolled back.
-     *
-     * @param id             the UUID of the order to be updated
-     * @param orderNewStatus the new status to be set
-     */
     @Override
     public void edit(UUID id, OrderStatus orderNewStatus) {
         String query = "UPDATE entity_schema.order SET status = ? WHERE id = ?";
@@ -93,11 +77,6 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
         }
     }
 
-    /**
-     * Retrieves all orders from the database.
-     *
-     * @return a list of all orders
-     */
     public List<Order> findAll() {
         String query = "SELECT id, username, car_vin_number, status, order_creation_date FROM entity_schema.order";
         List<Order> orders = new ArrayList<>();
@@ -118,12 +97,6 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
         return orders;
     }
 
-    /**
-     * Finds an order by its id.
-     *
-     * @param id the UUID of the order to be found
-     * @return an Optional containing the order if found, or empty if not found
-     */
     @Override
     public Optional<Order> findById(UUID id) {
         String query = "SELECT * FROM entity_schema.order WHERE id = ?";

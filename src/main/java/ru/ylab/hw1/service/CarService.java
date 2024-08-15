@@ -5,6 +5,10 @@ import ru.ylab.hw1.dto.Car;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the {@link CarService} interface that provides
+ * methods for managing cars in the car dealership application.
+ */
 public interface CarService {
 
     /**
