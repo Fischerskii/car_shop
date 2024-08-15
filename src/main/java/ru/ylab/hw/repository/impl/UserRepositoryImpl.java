@@ -1,25 +1,24 @@
 package ru.ylab.hw.repository.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw.config.DatabaseConfig;
 import ru.ylab.hw.dto.User;
 import ru.ylab.hw.enums.Role;
 import ru.ylab.hw.exception.DataAccessException;
-import ru.ylab.hw.repository.AbstractRepository;
 import ru.ylab.hw.repository.UserRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepositoryImpl extends AbstractRepository implements UserRepository {
+@Slf4j
+public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User user) {
         String query = "INSERT INTO entity_schema.user (username, password, role) VALUES (?, ?, ?)";
-        Connection connection = null;
 
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -27,24 +26,22 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
                 statement.setString(2, user.getPassword());
                 statement.setString(3, user.getRole().name());
                 statement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Transaction rolled back", e);
             }
-
-            connection.commit();
         } catch (SQLException e) {
-            rollbackConnection(connection);
+            log.error("Error creating user with username: {}", user.getUsername(), e);
             throw new DataAccessException("Failed to save user: " + user.getUsername(), e);
-        } finally {
-            closeConnection(connection);
         }
     }
 
     @Override
     public void update(User user) {
         String query = "UPDATE entity_schema.user SET password = ?, role = ? WHERE username = ?";
-        Connection connection = null;
 
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -52,37 +49,35 @@ public class UserRepositoryImpl extends AbstractRepository implements UserReposi
                 statement.setString(2, user.getRole().name());
                 statement.setString(3, user.getUsername());
                 statement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Transaction rolled back", e);
             }
-
-            connection.commit();
         } catch (SQLException e) {
-            rollbackConnection(connection);
+            log.error("Error updating user with username: {}", user.getUsername(), e);
             throw new DataAccessException("Failed to update user: " + user.getUsername(), e);
-        } finally {
-            closeConnection(connection);
         }
     }
 
     @Override
     public void delete(String username) {
         String query = "DELETE FROM entity_schema.user WHERE username = ?";
-        Connection connection = null;
 
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, username);
                 statement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Transaction rolled back", e);
             }
-
-            connection.commit();
         } catch (SQLException e) {
-            rollbackConnection(connection);
+            log.error("Error deleting user with username: {}", username, e);
             throw new DataAccessException("Failed to delete user: " + username, e);
-        } finally {
-            closeConnection(connection);
         }
     }
 

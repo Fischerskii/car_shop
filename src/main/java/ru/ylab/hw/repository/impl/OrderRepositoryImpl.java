@@ -5,7 +5,6 @@ import ru.ylab.hw.config.DatabaseConfig;
 import ru.ylab.hw.dto.Order;
 import ru.ylab.hw.enums.OrderStatus;
 import ru.ylab.hw.exception.DataAccessException;
-import ru.ylab.hw.repository.AbstractRepository;
 import ru.ylab.hw.repository.OrderRepository;
 
 import java.sql.*;
@@ -13,15 +12,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
-public class OrderRepositoryImpl extends AbstractRepository implements OrderRepository {
+public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void save(Order order) {
         String query = "INSERT INTO entity_schema.order (id, username, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
 
-        Connection connection = null;
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()){
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -40,8 +37,6 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
             }
         } catch (SQLException e) {
             log.error("Failed to save order", e);
-        } finally {
-            closeConnection(connection);
         }
     }
 
@@ -49,9 +44,7 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
     public void edit(UUID id, OrderStatus orderNewStatus) {
         String query = "UPDATE entity_schema.order SET status = ? WHERE id = ?";
 
-        Connection connection = null;
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -72,8 +65,6 @@ public class OrderRepositoryImpl extends AbstractRepository implements OrderRepo
             }
         } catch (SQLException e) {
             log.error("Failed to edit order", e);
-        } finally {
-            closeConnection(connection);
         }
     }
 

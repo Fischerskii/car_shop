@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw.config.DatabaseConfig;
 import ru.ylab.hw.dto.Car;
 import ru.ylab.hw.exception.DataAccessException;
-import ru.ylab.hw.repository.AbstractRepository;
 import ru.ylab.hw.repository.CarRepository;
 
 import java.sql.Connection;
@@ -16,14 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-public class CarRepositoryImpl extends AbstractRepository implements CarRepository {
+public class CarRepositoryImpl implements CarRepository {
 
     public Car save(Car car) {
         String sql = "INSERT INTO entity_schema.car (car_vin_number, brand, model, year, price, condition) VALUES (?, ?, ?, ?, ?, ?) RETURNING car_vin_number";
 
-        Connection connection = null;
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()){
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -38,26 +35,20 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
 
                 connection.commit();
             } catch (SQLException e) {
-                rollbackConnection(connection);
+                connection.rollback();
                 log.error("Error creating car with VIN: {}", car.getVinNumber(), e);
             }
         } catch (SQLException e) {
             log.error("Database error when saving car", e);
             throw new DataAccessException("Error saving car", e);
-        } finally {
-            closeConnection(connection);
         }
-
         return car;
     }
 
     public void edit(Car car) {
         String sql = "UPDATE entity_schema.car SET brand = ?, model = ?, year = ?, price = ?, condition = ? WHERE car_vin_number = ?";
 
-        Connection connection = null;
-
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()){
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -73,24 +64,19 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
 
                 connection.commit();
             } catch (SQLException e) {
-                rollbackConnection(connection);
+                connection.rollback();
                 log.error("Error updating car with VIN: {}", car.getVinNumber(), e);
             }
         } catch (SQLException e) {
             log.error("Database error when updating car", e);
             throw new DataAccessException("Error updating car", e);
-        } finally {
-            closeConnection(connection);
         }
     }
 
     public void delete(String vinNumber) {
         String sql = "DELETE FROM entity_schema.car WHERE id = ?";
 
-        Connection connection = null;
-
-        try {
-            connection = DatabaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -100,14 +86,12 @@ public class CarRepositoryImpl extends AbstractRepository implements CarReposito
 
                 connection.commit();
             } catch (SQLException e) {
-                rollbackConnection(connection);
+                connection.rollback();
                 log.error("Error deleting car with VIN: {}", vinNumber, e);
             }
         } catch (SQLException e) {
             log.error("Database error when deleting car", e);
             throw new DataAccessException("Error deleting car", e);
-        } finally {
-            closeConnection(connection);
         }
     }
 
