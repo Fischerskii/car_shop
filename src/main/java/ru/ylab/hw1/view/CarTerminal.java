@@ -57,7 +57,7 @@ public class CarTerminal implements TerminalAction {
     }
 
     protected void addCar(Scanner scanner) {
-        System.out.println("Enter VIN number: ");
+        System.out.print("Enter VIN number: ");
         String vin = scanner.nextLine();
         System.out.print("Enter brand: ");
         String brand = scanner.nextLine();
