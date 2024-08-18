@@ -1,7 +1,6 @@
 package ru.ylab.hw;
 
 import ru.ylab.hw.config.LiquibaseRunner;
-import ru.ylab.hw.view.Terminal;
 
 public class CarShopApp {
 
@@ -9,6 +8,6 @@ public class CarShopApp {
         LiquibaseRunner liquibaseRunner = new LiquibaseRunner();
         liquibaseRunner.runLiquibaseUpdate();
 
-        new Terminal().run();
+        System.out.println("CarShopApp is running...");
     }
 }

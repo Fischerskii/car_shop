@@ -1,9 +1,8 @@
-package ru.ylab.hw.service.impl;
+package ru.ylab.hw.audit;
 
-import ru.ylab.hw.dto.LogEntry;
+import ru.ylab.hw.entity.LogEntry;
 import ru.ylab.hw.enums.ActionType;
 import ru.ylab.hw.repository.LoggerRepository;
-import ru.ylab.hw.service.LoggerService;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -34,22 +33,11 @@ public class LoggerServiceImpl implements LoggerService {
         return loggerRepository.findByDate(date);
     }
 
-    /**
-     * Retrieves log entries filtered by the specified action type.
-     *
-     * @param actionType the action type to filter log entries by
-     * @return a list of {@link LogEntry} objects representing the log entries for the specified action type
-     */
     @Override
     public List<LogEntry> getLogsByAction(ActionType actionType) {
         return loggerRepository.findByActionType(actionType);
     }
 
-    /**
-     * Exports all logs to a specified file.
-     *
-     * @param filePath the path to the file where logs will be exported
-     */
     @Override
     public void exportLogsToFile(String filePath) {
         List<LogEntry> logs = loggerRepository.findAll();

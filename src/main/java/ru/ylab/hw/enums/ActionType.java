@@ -6,48 +6,23 @@ package ru.ylab.hw.enums;
  */
 public enum ActionType {
     /**
-     * Represents the action of registering a new user in the system.
+     * Represents the actions on cars
      */
-    REGISTER,
+    CAR_ACTIONS,
 
     /**
-     * Represents the action of logging into the system.
+     * Represents the actions on orders
      */
-    LOGIN,
+    ORDER_ACTIONS,
 
     /**
-     * Represents the action of adding a new car to the inventory.
+     * Represents the actions on orders
      */
-    ADD_CAR,
+    USER_ACTIONS,
 
     /**
-     * Represents the action of editing the details of an existing car in the inventory.
+     * Default value when no value is set
      */
-    EDIT_CAR,
-
-    /**
-     * Represents the action of deleting a car from the inventory.
-     */
-    DELETE_CAR,
-
-    /**
-     * Represents the action of creating a new order for a car.
-     */
-    CREATE_ORDER,
-
-    /**
-     * Represents the action of changing the status of an existing order.
-     */
-    CHANGE_ORDER_STATUS,
-
-    /**
-     * Represents the action of creating a new service request for a car.
-     */
-    CREATE_SERVICE_REQUEST,
-
-    /**
-     * Represents the action of changing the status of an existing service request.
-     */
-    CHANGE_SERVICE_REQUEST_STATUS
+    DEFAULT
 }
 

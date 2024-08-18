@@ -1,4 +1,4 @@
-package ru.ylab.hw.dto;
+package ru.ylab.hw.entity;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package ru.ylab.hw.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.ylab.hw.dto.LogEntry;
+import ru.ylab.hw.entity.LogEntry;
 import ru.ylab.hw.enums.ActionType;
 import ru.ylab.hw.repository.LoggerRepository;
 
@@ -22,7 +22,8 @@ public class LoggerRepositoryImpl implements LoggerRepository {
 
     @Override
     public void save(LogEntry logEntry) {
-        String sql = "INSERT INTO service_schema.logs (username, action_type, details, timestamp) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO service_schema.logs (username, action_type, details, timestamp) " +
+                "VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, logEntry.getUsername());
             pstmt.setString(2, logEntry.getActionType().name());

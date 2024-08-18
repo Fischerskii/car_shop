@@ -1,16 +1,20 @@
 package ru.ylab.hw.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.ylab.hw.audit.Audit;
 import ru.ylab.hw.enums.OrderStatus;
 import ru.ylab.hw.repository.OrderRepository;
 import ru.ylab.hw.service.OrderService;
-import ru.ylab.hw.dto.Order;
+import ru.ylab.hw.entity.Order;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static ru.ylab.hw.enums.ActionType.*;
+
 @Slf4j
+@Audit(actionType = ORDER_ACTIONS)
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 

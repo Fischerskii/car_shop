@@ -1,9 +1,10 @@
 package ru.ylab.hw.repository;
 
-import ru.ylab.hw.dto.User;
+import ru.ylab.hw.entity.User;
 import ru.ylab.hw.exception.DataAccessException;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementation of the {@link UserRepository} interface for managing users in the database.
@@ -26,7 +27,7 @@ public interface UserRepository {
      * @return the user corresponding to the given username, or {@code null} if not found
      * @throws DataAccessException if an error occurs during the database operation
      */
-    User getUserByUsername(String username);
+    Optional<User> getUserByUsername(String username);
 
     /**
      * Retrieves all users from the database.
