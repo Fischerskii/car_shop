@@ -4,46 +4,4 @@
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <filter>
-        <filter-name>JwtFilterAdmin</filter-name>
-        <filter-class>ru.ylab.hw.sequrity.JwtFilter</filter-class>
-        <init-param>
-            <param-name>allowedRoles</param-name>
-            <param-value>ADMIN</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>JwtFilterAdmin</filter-name>
-        <url-pattern>/api/admin/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>JwtFilterManager</filter-name>
-        <filter-class>ru.ylab.hw.sequrity.JwtFilter</filter-class>
-        <init-param>
-            <param-name>allowedRoles</param-name>
-            <param-value>MANAGER</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>JwtFilterManager</filter-name>
-        <url-pattern>/api/manager/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>JwtFilterUser</filter-name>
-        <filter-class>ru.ylab.hw.sequrity.JwtFilter</filter-class>
-        <init-param>
-            <param-name>allowedRoles</param-name>
-            <param-value>USER</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>JwtFilterUser</filter-name>
-        <url-pattern>/api/users/*</url-pattern>
-    </filter-mapping>
-
 </web-app>

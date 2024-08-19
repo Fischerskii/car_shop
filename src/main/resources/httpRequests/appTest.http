@@ -18,7 +18,10 @@ Content-Type: application/json
 }
 
 ### Get user by username
-GET http://localhost:8080/api/users/pavel
+GET http://localhost:8080/car-shop/api/users/pavel
 
 ### Get all users
 GET http://localhost:8080/api/users
+
+###
+GET http://localhost:8080/

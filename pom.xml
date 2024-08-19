@@ -131,6 +131,7 @@
         </repository>
     </repositories>
     <build>
+        <finalName>car-shop</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

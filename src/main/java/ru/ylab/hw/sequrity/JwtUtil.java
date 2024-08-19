@@ -12,9 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 public class JwtUtil {
-    private static final String SECRET_KEY = "secret-key";  //made for easier testing
+    private static final String SECRET_KEY = "secret-key";
     private static final long EXPIRATION_TIME = 86400000;
-
     private static final Key SIGNING_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
 
     public static String generateToken(String username, List<String> roles) {
@@ -24,7 +23,6 @@ public class JwtUtil {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SIGNING_KEY);
-
         return builder.compact();
     }
 

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ru.ylab.hw.dto.UserDTO;
 import ru.ylab.hw.entity.User;
 import ru.ylab.hw.repository.impl.UserRepositoryImpl;
+import ru.ylab.hw.sequrity.BlacklistService;
 import ru.ylab.hw.service.UserService;
 import ru.ylab.hw.service.impl.UserServiceImpl;
 
@@ -25,14 +26,16 @@ import java.util.NoSuchElementException;
 public class UserServlet extends HttpServlet {
     private final UserService userService;
     private final ObjectMapper objectMapper;
+    private final BlacklistService blacklistService;
 
     public UserServlet() {
-        userService = new UserServiceImpl(new UserRepositoryImpl());
-        objectMapper = new ObjectMapper();
+        this.userService = new UserServiceImpl(new UserRepositoryImpl());
+        this.objectMapper = new ObjectMapper();
+        this.blacklistService = new BlacklistService();
     }
 
     /**
-     * Handles {@code POST} requests to register a new user.
+     * Handles {@code POST} requests to either register, login, or logout a user.
      *
      * @param req  the {@link HttpServletRequest} object that contains the request the client made
      *             to the servlet
@@ -40,25 +43,16 @@ public class UserServlet extends HttpServlet {
      *             returns to the client
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try (PrintWriter writer = resp.getWriter()) {
-            UserDTO userDTO = objectMapper.readValue(req.getInputStream(), UserDTO.class);
-
-            if (req.getRequestURI().endsWith("/login")) {
-                String token = userService.login(userDTO.getUsername(), userDTO.getPassword());
-                resp.setStatus(HttpServletResponse.SC_OK);
-                writer.write(token);
-            } else {
-                userService.register(userDTO.getUsername(), userDTO.getPassword(), userDTO.getRole());
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-                writer.write("User registered successfully.");
-            }
-        } catch (IllegalArgumentException e) {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (req.getRequestURI().endsWith("/login")) {
+            handleLogin(req, resp);
+        } else if (req.getRequestURI().endsWith("/register")) {
+            handleRegister(req, resp);
+        } else if (req.getRequestURI().endsWith("/logout")) {
+            handleLogout(req, resp);
+        } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write(e.getMessage());
-        } catch (NoSuchElementException e) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            resp.getWriter().write("User not found");
+            resp.getWriter().write("Invalid endpoint.");
         }
     }
 
@@ -72,7 +66,7 @@ public class UserServlet extends HttpServlet {
      *             returns to the client
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String username = getUsernameFromPath(req);
             if (username != null) {
@@ -92,6 +86,43 @@ public class UserServlet extends HttpServlet {
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("Error processing request. Please try again later.");
+        }
+    }
+
+    private void handleLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDTO userDTO = objectMapper.readValue(req.getInputStream(), UserDTO.class);
+        try (PrintWriter writer = resp.getWriter()) {
+            String token = userService.login(userDTO.getUsername(), userDTO.getPassword());
+            resp.setStatus(HttpServletResponse.SC_OK);
+            writer.write(token);
+        } catch (IllegalArgumentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write(e.getMessage());
+        }
+    }
+
+    private void handleRegister(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDTO userDTO = objectMapper.readValue(req.getInputStream(), UserDTO.class);
+        try (PrintWriter writer = resp.getWriter()) {
+            userService.register(userDTO.getUsername(), userDTO.getPassword(), userDTO.getRole());
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            writer.write("User registered successfully.");
+        } catch (IllegalArgumentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write(e.getMessage());
+        }
+    }
+
+    private void handleLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String authHeader = req.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            blacklistService.blacklistToken(token);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write("Logged out successfully.");
+        } else {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("Invalid token.");
         }
     }
 
