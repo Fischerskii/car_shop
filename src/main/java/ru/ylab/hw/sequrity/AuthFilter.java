@@ -48,25 +48,24 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isAuthorized(List<String> roles, String uri, String method) {
-//        if (roles.contains("ADMIN")) {
-//            return true;
-//        }
-//
-//        if (roles.contains("MANAGER")) {
-//            return switch (uri) {
-//                case "/api/cars", "/api/orders", "/api/users/register", "/api/users" -> true;
-//                default -> method.equals("POST") || method.equals("PUT") || method.equals("DELETE") || method.equals("GET");
-//            };
-//        }
-//
-//        if (roles.contains("CLIENT")) {
-//            return switch (uri) {
-//                case "/api/cars", "/api/orders", "/api/users/register", "/api/users/login" -> method.equals("POST") || method.equals("GET");
-//                default -> false;
-//            };
-//        }
-//
-//        return false;
-        return true;
+        if (roles.contains("ADMIN")) {
+            return true;
+        }
+
+        if (roles.contains("MANAGER")) {
+            return switch (uri) {
+                case "/api/cars", "/api/orders", "/api/users/register", "/api/users" -> true;
+                default -> method.equals("POST") || method.equals("PUT") || method.equals("DELETE") || method.equals("GET");
+            };
+        }
+
+        if (roles.contains("CLIENT")) {
+            return switch (uri) {
+                case "/api/cars", "/api/orders", "/api/users/register", "/api/users/login" -> method.equals("POST") || method.equals("GET");
+                default -> false;
+            };
+        }
+
+        return false;
     }
 }
