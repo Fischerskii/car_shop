@@ -17,7 +17,7 @@ public abstract class BaseTest {
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer =
-            new PostgreSQLContainer<>(properties.getProperty("db.docker-image-name"))
+            new PostgreSQLContainer<>("postgres:15-alpine")
                     .withDatabaseName(properties.getProperty("db.name"))
                     .withUsername(properties.getProperty("db.username"))
                     .withPassword(properties.getProperty("db.password"));
