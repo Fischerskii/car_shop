@@ -1,72 +1,99 @@
-//package ru.ylab.hw1.service.impl;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//import ru.ylab.hw1.dto.Car;
-//import ru.ylab.hw1.dto.Order;
-//import ru.ylab.hw1.dto.User;
-//import ru.ylab.hw1.enums.OrderStatus;
-//import ru.ylab.hw1.enums.Role;
-//import ru.ylab.hw1.repository.impl.OrderRepositoryImpl;
-//
-//import java.util.Map;
-//
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.mockito.Mockito.*;
-//
-//class OrderServiceTest {
-//
-//    @Mock
-//    private OrderRepositoryImpl orderRepository;
-//
-//    @InjectMocks
-//    private OrderServiceImpl orderService;
-//
-//    @BeforeEach
-//    void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//    }
-//
-//    @Test
-//    @DisplayName("Проверка создания заказов")
-//    void createOrder_ShouldSaveOrder() {
-//        User client = new User("Pavel", "password", Role.CLIENT);
-//        Car car = new Car("vinNumber","Toyota", "Camry", 2020, 30000, "New");
-//
-//        Order order = new Order("Pavel");
-//
-//        orderService.createOrder();
-//
-//        verify(orderRepository, times(1)).save(any(Order.class));
-//    }
-//
-//    @Test
-//    @DisplayName("Проврка работоспособности функционала редактирования заказа")
-//    void changeOrderStatus_ShouldEditOrderStatusUsingRepository() {
-//        int orderId = 1;
-//        OrderStatus status = OrderStatus.COMPLETED;
-//
-//        orderService.changeOrderStatus(orderId, status);
-//
-//        verify(orderRepository, times(1)).edit(orderId, status);
-//    }
-//
-//    @Test
-//    @DisplayName("Проверка выдачи всех заказов")
-//    void getAllOrders_ShouldReturnAllOrdersUsingRepository() {
-//        Order order1 = new Order(new User("Pavel", "password", Role.CLIENT),
-//                new Car("Toyota", "Camry", 2020, 30000, "New"));
-//        Order order2 = new Order(new User("Sid", "password", Role.CLIENT),
-//                new Car("Honda", "Civic", 2019, 25000, "Used"));
-//        when(orderRepository.findAll()).thenReturn(Map.of(1, order1, 2, order2));
-//
-//        Map<Integer, Order> orders = orderService.getAllOrders();
-//
-//        assertThat(orders).containsExactlyInAnyOrderEntriesOf(Map.of(1, order1, 2, order2));
-//        verify(orderRepository, times(1)).findAll();
-//    }
-//}
+package ru.ylab.hw.service.impl;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import ru.ylab.hw.entity.Order;
+import ru.ylab.hw.enums.OrderStatus;
+import ru.ylab.hw.repository.OrderRepository;
+import ru.ylab.hw.service.OrderService;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+class OrderServiceTest {
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @InjectMocks
+    private OrderService orderService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    @DisplayName("Should create a new order successfully")
+    void createOrder_ShouldCallSaveMethod() {
+        Order order = createTestOrder();
+
+        orderService.createOrder(order);
+
+        verify(orderRepository, times(1)).save(order);
+    }
+
+    @Test
+    @DisplayName("Should change order status successfully")
+    void changeOrderStatus_ShouldCallEditMethod() {
+        UUID orderId = UUID.randomUUID();
+        OrderStatus newStatus = OrderStatus.COMPLETED;
+
+        orderService.changeOrderStatus(orderId, newStatus);
+
+        verify(orderRepository, times(1)).edit(orderId, newStatus);
+    }
+
+    @Test
+    @DisplayName("Should return order by ID if it exists")
+    void getOrderById_ShouldReturnOrder_WhenExists() {
+        UUID orderId = UUID.randomUUID();
+        Order order = createTestOrder();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+
+        Optional<Order> result = orderService.getOrderById(orderId);
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(orderId);
+    }
+
+    @Test
+    @DisplayName("Should return empty if order does not exist")
+    void getOrderById_ShouldReturnEmpty_WhenNotExists() {
+        UUID orderId = UUID.randomUUID();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+
+        Optional<Order> result = orderService.getOrderById(orderId);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should return all orders from the repository")
+    void getAllOrders_ShouldReturnAllOrders() {
+        List<Order> orders = Arrays.asList(createTestOrder(), createTestOrder());
+        when(orderRepository.findAll()).thenReturn(orders);
+
+        List<Order> result = orderService.getAllOrders();
+
+        assertThat(result).hasSize(2);
+        verify(orderRepository, times(1)).findAll();
+    }
+
+    private Order createTestOrder() {
+        return Order.builder()
+                .id(UUID.randomUUID())
+                .userName("john_doe")
+                .carVinNumber("1HGCM82633A004352")
+                .status(OrderStatus.PENDING)
+                .orderCreationDate(LocalDateTime.now())
+                .build();
+    }
+}

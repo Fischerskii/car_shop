@@ -31,7 +31,7 @@ public class AuditAspect {
     public Object logAndAudit(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
 
-        Object result = joinPoint.proceed();  // Выполнение метода
+        Object result = joinPoint.proceed();
 
         long executionTime = System.currentTimeMillis() - start;
         log.info("{} executed in {} ms", joinPoint.getSignature(), executionTime);
