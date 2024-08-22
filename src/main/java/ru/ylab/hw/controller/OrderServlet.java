@@ -91,21 +91,12 @@ public class OrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UUID orderId = getOrderIdFromPath(req);
 
-        if (orderId != null) {
-            Optional<Order> order = orderService.getOrderById(orderId);
-            if (order.isPresent()) {
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().write(objectMapper.writeValueAsString(OrderMapper.INSTANCE.toDTO(order.get())));
-            } else {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            }
-        } else {
-            List<Order> allOrders = orderService.getAllOrders();
+        Optional<Order> order = orderService.getOrderById(orderId);
+        if (order.isPresent()) {
             resp.setStatus(HttpServletResponse.SC_OK);
-            List<OrderDTO> orderDTOS = allOrders.stream()
-                    .map(OrderMapper.INSTANCE::toDTO)
-                    .toList();
-            resp.getWriter().write(objectMapper.writeValueAsString(orderDTOS));
+            resp.getWriter().write(objectMapper.writeValueAsString(OrderMapper.INSTANCE.toDTO(order.get())));
+        } else {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -118,8 +109,12 @@ public class OrderServlet extends HttpServlet {
     private UUID getOrderIdFromPath(HttpServletRequest req) {
         String path = req.getPathInfo();
         if (path == null || path.equals("/")) {
-            return null;
+            throw new IllegalArgumentException("Order ID is missing in the request path");
         }
-        return UUID.fromString(path.substring(1));
+        try {
+            return UUID.fromString(path.substring(1));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid Order ID format", e);
+        }
     }
 }

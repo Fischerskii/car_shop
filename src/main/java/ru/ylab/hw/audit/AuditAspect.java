@@ -29,11 +29,11 @@ public class AuditAspect {
      */
     @Around("execution(* *(..)) && (@within(Audit) || @annotation(Audit))")
     public Object logAndAudit(ProceedingJoinPoint joinPoint) throws Throwable {
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
 
         Object result = joinPoint.proceed();
 
-        long executionTime = System.currentTimeMillis() - start;
+        long executionTime = System.nanoTime() - start;
         log.info("{} executed in {} ms", joinPoint.getSignature(), executionTime);
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();

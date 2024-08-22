@@ -1,21 +1,28 @@
 package ru.ylab.hw.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import ru.ylab.hw.enums.Role;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class UserDTO {
     private String username;
     private String password;
     private Role role;
 
-    public UserDTO(String username, String password, Role role) {
+    public void setUsername(String username) {
         validateUsername(username);
-        validatePassword(password);
-        validateRole(role);
-
         this.username = username;
+    }
+
+    public void setPassword(String password) {
+        validatePassword(password);
         this.password = password;
+    }
+
+    public void setRole(Role role) {
+        validateRole(role);
         this.role = role;
     }
 
@@ -26,8 +33,8 @@ public class UserDTO {
     }
 
     private void validatePassword(String password) {
-        if (password == null || password.length() < 8) {
-            throw new IllegalArgumentException("Password must be at least 8 characters long");
+        if (password == null || password.length() < 3) {
+            throw new IllegalArgumentException("Password must be at least 3 characters long");
         }
     }
 
