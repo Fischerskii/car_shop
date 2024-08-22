@@ -3,7 +3,9 @@ package ru.ylab.hw.config;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,15 +21,22 @@ public class DatabaseConfig {
 
     private static final Properties properties = new Properties();
 
-
     //Static block to load properties from the file at class initialization
     static {
-        String propertiesFilePath = "src/main/resources/application.properties";
-        try (FileInputStream input = new FileInputStream(propertiesFilePath)) {
+        try (InputStream input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
+            if (input == null) {
+                throw new FileNotFoundException("Properties file not found in classpath: application.properties");
+            }
             properties.load(input);
         } catch (IOException e) {
-            log.error("Failed to load properties file from path: {}", propertiesFilePath, e);
+            log.error("Failed to load properties file", e);
             throw new RuntimeException("Failed to load properties file", e);
+        }
+
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("PostgreSQL Driver not found", e);
         }
     }
 

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,17 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
+
+        String requestURI = req.getRequestURI();
+
+        if (requestURI.endsWith("/register") || requestURI.endsWith("/login")) {
+            try {
+                chain.doFilter(request, response);
+            } catch (IOException | ServletException e) {
+                log.error("Error during filtering", e);
+            }
+            return;
+        }
 
         String authHeader = req.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -33,7 +45,6 @@ public class AuthFilter implements Filter {
             request.setAttribute("username", username);
             request.setAttribute("roles", roles);
 
-            String requestURI = req.getRequestURI();
             String method = req.getMethod();
 
             if (!isAuthorized(roles, requestURI, method)) {

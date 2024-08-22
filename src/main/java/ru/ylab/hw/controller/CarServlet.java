@@ -39,8 +39,7 @@ public class CarServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             CarDTO carDTO = objectMapper.readValue(req.getInputStream(), CarDTO.class);
-
-            Car car = CarMapper.INSTANCE.toEntity(carDTO);
+            Car car = mapToEntity(carDTO);
             carService.addCar(car);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.getWriter().write(objectMapper.writeValueAsString(CarMapper.INSTANCE.toDTO(car)));
@@ -66,7 +65,7 @@ public class CarServlet extends HttpServlet {
             CarDTO carDTO = objectMapper.readValue(req.getInputStream(), CarDTO.class);
             carDTO.setVin(vin);
 
-            Car car = CarMapper.INSTANCE.toEntity(carDTO);
+            Car car = mapToEntity(carDTO);
             carService.editCar(car);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().write(objectMapper.writeValueAsString(CarMapper.INSTANCE.toDTO(car)));
@@ -133,5 +132,9 @@ public class CarServlet extends HttpServlet {
             return null;
         }
         return path.substring(1);
+    }
+
+    private Car mapToEntity(CarDTO carDTO) {
+        return CarMapper.INSTANCE.toEntity(carDTO);
     }
 }
