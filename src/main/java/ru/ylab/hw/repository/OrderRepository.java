@@ -1,6 +1,6 @@
 package ru.ylab.hw.repository;
 
-import ru.ylab.hw.dto.Order;
+import ru.ylab.hw.entity.Order;
 import ru.ylab.hw.enums.OrderStatus;
 
 import java.util.List;

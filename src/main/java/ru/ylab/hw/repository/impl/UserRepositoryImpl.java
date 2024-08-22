@@ -2,7 +2,7 @@ package ru.ylab.hw.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw.config.DatabaseConfig;
-import ru.ylab.hw.dto.User;
+import ru.ylab.hw.entity.User;
 import ru.ylab.hw.enums.Role;
 import ru.ylab.hw.exception.DataAccessException;
 import ru.ylab.hw.repository.UserRepository;
@@ -10,13 +10,15 @@ import ru.ylab.hw.repository.UserRepository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User user) {
-        String query = "INSERT INTO entity_schema.user (username, password, role) VALUES (?, ?, ?)";
+        String query = "INSERT INTO entity_schema.user (username, password, role) " +
+                "VALUES (?, ?, ?)";
 
         try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
@@ -39,7 +41,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        String query = "UPDATE entity_schema.user SET password = ?, role = ? WHERE username = ?";
+        String query = "UPDATE entity_schema.user " +
+                "SET password = ?, role = ? " +
+                "WHERE username = ?";
 
         try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
@@ -62,7 +66,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(String username) {
-        String query = "DELETE FROM entity_schema.user WHERE username = ?";
+        String query = "DELETE FROM entity_schema.user " +
+                "WHERE username = ?";
 
         try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
@@ -82,26 +87,26 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        String query = "SELECT * FROM entity_schema.user WHERE username = ?";
-        User user = null;
-
+    public Optional<User> getUserByUsername(String username) {
+        String query = "SELECT * FROM entity_schema.user " +
+                "WHERE username = ?";
         try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 Role role = Role.valueOf(resultSet.getString("role").toUpperCase().trim());
-                user = new User(
+                User user = new User(
                         resultSet.getString("username"),
                         resultSet.getString("password"),
                         role
                 );
+                return Optional.of(user);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to retrieve user by username: " + username, e);
         }
-        return user;
+        return Optional.empty();
     }
 
     @Override

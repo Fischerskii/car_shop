@@ -1,6 +1,6 @@
 package ru.ylab.hw.repository;
 
-import ru.ylab.hw.dto.LogEntry;
+import ru.ylab.hw.entity.LogEntry;
 import ru.ylab.hw.enums.ActionType;
 
 import java.time.LocalDate;

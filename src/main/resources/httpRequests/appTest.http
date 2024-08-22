@@ -1,0 +1,27 @@
+### Register a new user
+POST http://localhost:8080/car-shop/api/users/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "password123",
+  "role": "user"
+}
+
+### Login user
+POST http://localhost:8080/car-shop/api/users/login
+Content-Type: application/json
+
+{
+  "username": "pavel",
+  "password": "123"
+}
+
+### Get user by username
+GET http://localhost:8080/car-shop/api/users/pavel
+
+### Get all users
+GET http://localhost:8080/car-shop/api/users
+
+###
+GET http://localhost:8080/

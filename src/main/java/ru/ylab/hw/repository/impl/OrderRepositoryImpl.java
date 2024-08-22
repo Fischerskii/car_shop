@@ -2,7 +2,7 @@ package ru.ylab.hw.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.ylab.hw.config.DatabaseConfig;
-import ru.ylab.hw.dto.Order;
+import ru.ylab.hw.entity.Order;
 import ru.ylab.hw.enums.OrderStatus;
 import ru.ylab.hw.exception.DataAccessException;
 import ru.ylab.hw.repository.OrderRepository;
@@ -16,7 +16,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void save(Order order) {
-        String query = "INSERT INTO entity_schema.order (id, username, car_vin_number, status, order_creation_date) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO entity_schema.order (id, username, car_vin_number, status, order_creation_date) " +
+                "VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConfig.getConnection()){
             connection.setAutoCommit(false);
@@ -42,7 +43,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void edit(UUID id, OrderStatus orderNewStatus) {
-        String query = "UPDATE entity_schema.order SET status = ? WHERE id = ?";
+        String query = "UPDATE entity_schema.order " +
+                "SET status = ? " +
+                "WHERE id = ?";
 
         try (Connection connection = DatabaseConfig.getConnection()) {
             connection.setAutoCommit(false);
@@ -69,7 +72,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     public List<Order> findAll() {
-        String query = "SELECT id, username, car_vin_number, status, order_creation_date FROM entity_schema.order";
+        String query = "SELECT id, username, car_vin_number, status, order_creation_date " +
+                "FROM entity_schema.order";
         List<Order> orders = new ArrayList<>();
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -90,7 +94,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> findById(UUID id) {
-        String query = "SELECT * FROM entity_schema.order WHERE id = ?";
+        String query = "SELECT * " +
+                "FROM entity_schema.order " +
+                "WHERE id = ?";
 
         Order order = null;
         try (Connection connection = DatabaseConfig.getConnection();

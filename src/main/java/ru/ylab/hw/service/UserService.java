@@ -1,6 +1,6 @@
 package ru.ylab.hw.service;
 
-import ru.ylab.hw.dto.User;
+import ru.ylab.hw.entity.User;
 import ru.ylab.hw.enums.Role;
 
 import java.util.List;
@@ -25,7 +25,14 @@ public interface UserService {
      * @param password the password provided by the user
      * @return the {@link User} object if the login is successful, or {@code null} if the credentials are incorrect
      */
-    User login(String username, String password);
+    String login(String username, String password);
+
+    /** Retrieves a user by username from the repository.
+     *
+     * @param username the username by the search is performed
+     * @return the {@link User} object if the login is successful, or {@code null} if the credentials are incorrect
+     */
+    User getUserByUsername(String username);
 
     /**
      * Retrieves a list of all users from the repository.

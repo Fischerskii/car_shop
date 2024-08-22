@@ -1,15 +1,18 @@
 package ru.ylab.hw.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.ylab.hw.audit.Audit;
 import ru.ylab.hw.repository.CarRepository;
 import ru.ylab.hw.service.CarService;
-import ru.ylab.hw.dto.Car;
+import ru.ylab.hw.entity.Car;
 
 import java.util.List;
 import java.util.Optional;
 
+import static ru.ylab.hw.enums.ActionType.*;
 
 @Slf4j
+@Audit(actionType = CAR_ACTIONS)
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
 

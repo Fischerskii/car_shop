@@ -1,6 +1,6 @@
 package ru.ylab.hw.repository;
 
-import ru.ylab.hw.dto.Car;
+import ru.ylab.hw.entity.Car;
 import ru.ylab.hw.exception.DataAccessException;
 
 import java.util.List;

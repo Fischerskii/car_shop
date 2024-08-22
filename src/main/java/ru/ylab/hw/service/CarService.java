@@ -1,6 +1,6 @@
 package ru.ylab.hw.service;
 
-import ru.ylab.hw.dto.Car;
+import ru.ylab.hw.entity.Car;
 
 import java.util.List;
 import java.util.Optional;
