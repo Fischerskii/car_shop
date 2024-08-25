@@ -5,7 +5,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
 import ru.ylab.hw.enums.ActionType;
+import ru.ylab.hw.service.LoggerService;
 
 import java.util.Arrays;
 
@@ -14,6 +16,7 @@ import java.util.Arrays;
  *  * with {@link Audit}, and it performs auditing actions such as logging execution time and recording user actions.
  */
 @Aspect
+@Component
 @Slf4j
 public class AuditAspect {
 

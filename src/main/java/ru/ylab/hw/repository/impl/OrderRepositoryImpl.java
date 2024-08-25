@@ -1,6 +1,7 @@
 package ru.ylab.hw.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.ylab.hw.config.DatabaseConfig;
 import ru.ylab.hw.entity.Order;
 import ru.ylab.hw.enums.OrderStatus;
@@ -11,6 +12,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Component
 @Slf4j
 public class OrderRepositoryImpl implements OrderRepository {
 
@@ -19,12 +21,12 @@ public class OrderRepositoryImpl implements OrderRepository {
         String query = "INSERT INTO entity_schema.order (id, username, car_vin_number, status, order_creation_date) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection connection = DatabaseConfig.getConnection()){
+        try (Connection connection = new DatabaseConfig().getConnection()){
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setObject(1, order.getId());
-                statement.setString(2, order.getUserName());
+                statement.setString(2, order.getUsername());
                 statement.setString(3, order.getCarVinNumber());
                 statement.setString(4, String.valueOf(order.getStatus()));
                 statement.setTimestamp(5, Timestamp.valueOf(order.getOrderCreationDate()));
@@ -47,7 +49,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 "SET status = ? " +
                 "WHERE id = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -76,7 +78,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 "FROM entity_schema.order";
         List<Order> orders = new ArrayList<>();
 
-        try (Connection connection = DatabaseConfig.getConnection();
+        try (Connection connection = new DatabaseConfig().getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -99,7 +101,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 "WHERE id = ?";
 
         Order order = null;
-        try (Connection connection = DatabaseConfig.getConnection();
+        try (Connection connection = new DatabaseConfig().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, String.valueOf(id));
@@ -132,7 +134,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         return Order.builder()
                 .id(UUID.fromString(id))
-                .userName(userName)
+                .username(userName)
                 .carVinNumber(carVinNumber)
                 .status(status)
                 .orderCreationDate(orderCreationDate)

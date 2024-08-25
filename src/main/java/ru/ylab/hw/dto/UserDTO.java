@@ -1,11 +1,11 @@
 package ru.ylab.hw.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.ylab.hw.enums.Role;
 
 @Getter
-@NoArgsConstructor
 public class UserDTO {
     private String username;
     private String password;

@@ -1,6 +1,9 @@
 package ru.ylab.hw.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,23 +19,25 @@ import java.util.Properties;
  * <p>
  * This class loads the database connection properties from an external file and provides a method to obtain a connection.
  */
+@Configuration
 @Slf4j
 public class DatabaseConfig {
 
-    private static final Properties properties = new Properties();
+    @Value("${db.url}")
+    private String url;
 
-    //Static block to load properties from the file at class initialization
-    static {
-        try (InputStream input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
-            if (input == null) {
-                throw new FileNotFoundException("Properties file not found in classpath: application.properties");
-            }
-            properties.load(input);
-        } catch (IOException e) {
-            log.error("Failed to load properties file", e);
-            throw new RuntimeException("Failed to load properties file", e);
-        }
+    @Value("${db.username")
+    private String username;
 
+    @Value("${db.password}")
+    private String password;
+
+    @Bean(initMethod = "init")
+    public DatabaseConfig databaseConfig() {
+        return new DatabaseConfig();
+    }
+
+    public void init() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -46,11 +51,7 @@ public class DatabaseConfig {
      * @return a {@link Connection} object for interacting with the database
      * @throws SQLException if a database access error occurs or the URL is {@code null}
      */
-    public static Connection getConnection() throws SQLException {
-        String url = properties.getProperty("db.url");
-        String user = properties.getProperty("db.username");
-        String password = properties.getProperty("db.password");
-
-        return DriverManager.getConnection(url, user, password);
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, username, password);
     }
 }

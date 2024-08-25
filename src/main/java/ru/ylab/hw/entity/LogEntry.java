@@ -1,23 +1,30 @@
 package ru.ylab.hw.entity;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import ru.ylab.hw.enums.ActionType;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class LogEntry {
-    private String username;
-    private ActionType actionType;
-    private String details;
-    private LocalDateTime timestamp;
+    private final UUID id;
+    private final String username;
+    private final ActionType actionType;
+    private final String logMessage;
+    private final LocalDateTime timestamp;
 
-    public LogEntry(String username, ActionType actionType, String details) {
+    public LogEntry(UUID id, String username, ActionType actionType, String logMessage, LocalDateTime timestamp) {
+        this.id = id;
         this.username = username;
         this.actionType = actionType;
-        this.details = details;
-        this.timestamp = LocalDateTime.now();
+        this.logMessage = logMessage;
+        this.timestamp = timestamp;
+    }
+
+    public LogEntry(String username, ActionType actionType, String logMessage) {
+        this(UUID.randomUUID(), username, actionType, logMessage, LocalDateTime.now());
     }
 }

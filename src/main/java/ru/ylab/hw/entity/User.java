@@ -2,6 +2,7 @@ package ru.ylab.hw.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.ylab.hw.enums.Role;
 
 @Data

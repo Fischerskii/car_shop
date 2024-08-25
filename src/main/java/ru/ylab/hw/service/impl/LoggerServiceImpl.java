@@ -1,8 +1,11 @@
-package ru.ylab.hw.audit;
+package ru.ylab.hw.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.ylab.hw.entity.LogEntry;
 import ru.ylab.hw.enums.ActionType;
 import ru.ylab.hw.repository.LoggerRepository;
+import ru.ylab.hw.service.LoggerService;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -10,9 +13,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
 public class LoggerServiceImpl implements LoggerService {
     private final LoggerRepository loggerRepository;
 
+    @Autowired
     public LoggerServiceImpl(LoggerRepository loggerRepository) {
         this.loggerRepository = loggerRepository;
     }

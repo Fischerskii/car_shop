@@ -1,0 +1,17 @@
+# Database Configuration
+db:
+  url: jdbc:postgresql://localhost:5432/car_shop_db
+  name: car_shop_db
+  username: car_shop_user
+  password: password
+
+# Liquibase Configuration
+liquibase:
+  changelog: classpath:/db/changelog/changelog.xml
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: DEBUG

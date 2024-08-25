@@ -1,6 +1,8 @@
 package ru.ylab.hw.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.ylab.hw.audit.Audit;
 import ru.ylab.hw.enums.OrderStatus;
 import ru.ylab.hw.repository.OrderRepository;
@@ -13,6 +15,7 @@ import java.util.UUID;
 
 import static ru.ylab.hw.enums.ActionType.*;
 
+@Service
 @Slf4j
 @Audit(actionType = ORDER_ACTIONS)
 public class OrderServiceImpl implements OrderService {

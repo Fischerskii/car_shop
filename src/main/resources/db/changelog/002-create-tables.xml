@@ -7,7 +7,7 @@
     <changeSet id="002-create-tables" author="Pavel Trofimov">
 
         <createTable schemaName="service_schema" tableName="logs">
-            <column name="id" type="INT" defaultValueComputed="nextval('service_schema.log_id_seq')">
+            <column name="id" type="UUID" defaultValueComputed="nextval('service_schema.log_id_seq')">
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="VARCHAR(50)"/>
