@@ -23,7 +23,7 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void setup() {
-        try (InputStream input = new FileInputStream("src/main/resources/application.properties")) {
+        try (InputStream input = new FileInputStream("src/main/resources/application.yml")) {
             properties.load(input);
         } catch (IOException ex) {
             ex.printStackTrace();
