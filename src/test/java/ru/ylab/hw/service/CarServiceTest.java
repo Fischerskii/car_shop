@@ -1,4 +1,4 @@
-package ru.ylab.hw.service.impl;
+package ru.ylab.hw.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.ylab.hw.entity.Car;
 import ru.ylab.hw.repository.CarRepository;
-import ru.ylab.hw.service.CarService;
 
 import java.util.Arrays;
 import java.util.List;

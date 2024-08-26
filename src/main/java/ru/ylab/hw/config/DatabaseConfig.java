@@ -26,16 +26,11 @@ public class DatabaseConfig {
     @Value("${db.url}")
     private String url;
 
-    @Value("${db.username")
+    @Value("${db.username}")
     private String username;
 
     @Value("${db.password}")
     private String password;
-
-    @Bean(initMethod = "init")
-    public DatabaseConfig databaseConfig() {
-        return new DatabaseConfig();
-    }
 
     public void init() {
         try {

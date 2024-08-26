@@ -1,4 +1,4 @@
-package ru.ylab.hw.service.impl;
+package ru.ylab.hw.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 import ru.ylab.hw.entity.Order;
 import ru.ylab.hw.enums.OrderStatus;
 import ru.ylab.hw.repository.OrderRepository;
-import ru.ylab.hw.service.OrderService;
 
 import java.time.LocalDateTime;
 import java.util.*;

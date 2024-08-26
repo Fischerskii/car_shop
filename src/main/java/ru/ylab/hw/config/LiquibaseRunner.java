@@ -26,6 +26,13 @@ public class LiquibaseRunner {
     @Value("${liquibase.changelog}")
     private String changelogFile;
 
+    private final DatabaseConfig databaseConfig;
+
+    @Autowired
+    public LiquibaseRunner(DatabaseConfig databaseConfig) {
+        this.databaseConfig = databaseConfig;
+    }
+
     /**
      * Executes Liquibase update to apply changes to the database schema.
      * <p>
@@ -34,7 +41,7 @@ public class LiquibaseRunner {
      * @throws RuntimeException if a database connection or Liquibase operation fails.
      */
     public void runLiquibaseUpdate() {
-        try (Connection connection = new DatabaseConfig().getConnection()) {
+        try (Connection connection = databaseConfig.getConnection()) {
             Database database = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
             Liquibase liquibase = new Liquibase(changelogFile, new ClassLoaderResourceAccessor(), database);

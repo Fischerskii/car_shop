@@ -3,8 +3,6 @@ package ru.ylab.hw.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.ylab.hw.audit.Audit;
-import ru.ylab.hw.dto.CarDTO;
-import ru.ylab.hw.mapper.CarMapper;
 import ru.ylab.hw.repository.CarRepository;
 import ru.ylab.hw.service.CarService;
 import ru.ylab.hw.entity.Car;

@@ -1,36 +1,36 @@
 package ru.ylab.hw.sequrity;
 
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 @Component
 @Slf4j
-public class AuthFilter extends OncePerRequestFilter {
+public class AuthFilter implements Filter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    @NotNull HttpServletResponse response,
-                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        String requestURI = httpRequest.getRequestURI();
 
         if (requestURI.endsWith("/register") || requestURI.endsWith("/login")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = httpRequest.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -39,18 +39,18 @@ public class AuthFilter extends OncePerRequestFilter {
             Claims claims = JwtUtil.validateToken(token);
             String username = Objects.requireNonNull(claims).getSubject();
             List<String> roles = claims.get("roles", List.class);
-            request.setAttribute("username", username);
-            request.setAttribute("roles", roles);
+            httpRequest.setAttribute("username", username);
+            httpRequest.setAttribute("roles", roles);
 
-            if (!isAuthorized(roles, requestURI, request.getMethod())) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            if (!isAuthorized(roles, requestURI, httpRequest.getMethod())) {
+                httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             log.error("JWT token validation error", e);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 

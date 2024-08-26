@@ -1,12 +1,17 @@
 package ru.ylab.hw.config;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import ru.ylab.hw.sequrity.AuthFilter;
+
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{AppConfig.class, SwaggerConfig.class};
+        return new Class[]{AppConfig.class};
     }
 
     @Override
@@ -15,7 +20,15 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     }
 
     @Override
-    protected String @NotNull [] getServletMappings() {
+    protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+
+        FilterRegistration.Dynamic authFilterRegistration = servletContext.addFilter("authFilter", new AuthFilter());
+        authFilterRegistration.addMappingForUrlPatterns(null, false, "/*");
     }
 }

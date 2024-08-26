@@ -1,4 +1,4 @@
-package ru.ylab.hw1.service.impl;
+package ru.ylab.hw.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
