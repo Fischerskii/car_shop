@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.ylab.hw.entity.Car;
 import ru.ylab.hw.repository.CarRepository;
+import ru.ylab.hw.service.impl.CarServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ class CarServiceTest {
     private CarRepository carRepository;
 
     @InjectMocks
-    private CarService carService;
+    private CarServiceImpl carService;
 
     @BeforeEach
     void setUp() {

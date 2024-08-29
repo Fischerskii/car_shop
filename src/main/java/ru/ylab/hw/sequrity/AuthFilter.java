@@ -3,10 +3,11 @@ package ru.ylab.hw.sequrity;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import javax.servlet.*;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,18 @@ public class AuthFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String requestURI = httpRequest.getRequestURI();
+
+        if (requestURI.endsWith("/swagger-ui.html")
+                || requestURI.contains("/webjars")
+                || requestURI.endsWith("/v2/api-docs")
+                || requestURI.endsWith("/swagger-resources")
+                || requestURI.endsWith("/swagger-resources/configuration/ui")
+                || requestURI.endsWith("/swagger-ui")
+                || requestURI.endsWith("/swagger")
+                || requestURI.endsWith("/swagger-ui/index.html")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (requestURI.endsWith("/register") || requestURI.endsWith("/login")) {
             filterChain.doFilter(request, response);
@@ -62,7 +75,8 @@ public class AuthFilter implements Filter {
         if (roles.contains("MANAGER")) {
             return switch (uri) {
                 case "/api/cars", "/api/orders", "/api/users/register", "/api/users" -> true;
-                default -> method.equals("POST") || method.equals("PUT") || method.equals("DELETE") || method.equals("GET");
+                default ->
+                        method.equals("POST") || method.equals("PUT") || method.equals("DELETE") || method.equals("GET");
             };
         }
 

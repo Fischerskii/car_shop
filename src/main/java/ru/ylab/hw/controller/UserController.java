@@ -1,5 +1,6 @@
 package ru.ylab.hw.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +14,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
     private final BlacklistService blacklistService;
-
-    @Autowired
-    public UserController(UserService userService, BlacklistService blacklistService) {
-        this.userService = userService;
-        this.blacklistService = blacklistService;
-    }
 
     @GetMapping
     public ResponseEntity<List<User>> viewUsers() {

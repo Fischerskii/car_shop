@@ -1,6 +1,6 @@
 package ru.ylab.hw.controller;
 
-import org.mapstruct.factory.Mappers;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +14,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderMapper orderMapper = Mappers.getMapper(OrderMapper.class);
-
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    private final OrderMapper orderMapper;
 
     @PostMapping("/create")
     public ResponseEntity<?> createOrder(OrderDTO orderDTO) {

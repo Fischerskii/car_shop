@@ -19,14 +19,14 @@
         <logback.version>1.5.7</logback.version>
         <postgresql.version>42.7.3</postgresql.version>
         <liquibase.version>4.29.0</liquibase.version>
-        <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
         <mapstruct.version>1.6.0</mapstruct.version>
         <aspectj.version>1.9.22</aspectj.version>
         <jackson.version>2.17.2</jackson.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
         <testcontainers.version>1.20.0</testcontainers.version>
-        <spring.version>6.1.12</spring.version>
+        <spring.version>5.3.26</spring.version>
         <springfox.version>3.0.0</springfox.version>
+        <javax.version>4.0.1</javax.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <java.version>17</java.version>
     </properties>
@@ -44,6 +44,13 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -89,12 +96,6 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>${jakarta.servlet.version}</version>
         </dependency>
 
         <dependency>
@@ -172,6 +173,12 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox.version}</version>
@@ -217,7 +224,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>

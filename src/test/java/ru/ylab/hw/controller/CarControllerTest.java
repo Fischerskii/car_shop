@@ -1,18 +1,22 @@
 package ru.ylab.hw.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import ru.ylab.hw.BaseTest;
-import org.mockito.junit.jupiter.MockitoExtension;
+import ru.ylab.hw.config.AppConfig;
 import ru.ylab.hw.dto.CarDTO;
 import ru.ylab.hw.entity.Car;
 import ru.ylab.hw.mapper.CarMapper;
 import ru.ylab.hw.service.CarService;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +25,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig
+@ContextConfiguration(classes = {AppConfig.class, CarController.class})
+@WebAppConfiguration
 class CarControllerTest extends BaseTest {
 
     @Mock
@@ -32,6 +38,11 @@ class CarControllerTest extends BaseTest {
 
     @InjectMocks
     private CarController carController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     @DisplayName("Add car successfully")
@@ -111,7 +122,7 @@ class CarControllerTest extends BaseTest {
     void testGetCar_Found() {
         String vin = "1HGCM82633A004352";
         Car car = new Car();
-        car.setVinNumber("1HGCM82633A004352");
+        car.setVinNumber(vin);
         car.setBrand("Toyota");
         car.setModel("Camry");
         car.setYear(2020);

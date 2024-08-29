@@ -1,7 +1,6 @@
 package ru.ylab.hw.controller;
 
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/cars")
 public class CarController {
 
     private final CarService carService;
-    private final CarMapper carMapper = Mappers.getMapper(CarMapper.class);
-
-    @Autowired
-    public CarController(CarService carService) {
-        this.carService = carService;
-    }
+    private final CarMapper carMapper;
 
     @PostMapping("/create")
     public ResponseEntity<?> addCar(@RequestBody CarDTO carDTO) {

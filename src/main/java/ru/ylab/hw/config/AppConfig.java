@@ -1,13 +1,11 @@
 package ru.ylab.hw.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 
 @Configuration
 @ComponentScan(basePackages = "ru.ylab.hw")
 @PropertySource("classpath:application.properties")
+@EnableAspectJAutoProxy
 public class AppConfig {
 
     @Bean(initMethod = "init")

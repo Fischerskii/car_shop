@@ -1,14 +1,17 @@
 package ru.ylab.hw.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.ylab.hw.BaseTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
+import ru.ylab.hw.config.AppConfig;
 import ru.ylab.hw.dto.UserDTO;
 import ru.ylab.hw.entity.User;
 import ru.ylab.hw.enums.Role;
@@ -22,8 +25,10 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class UserControllerTest extends BaseTest {
+@SpringJUnitConfig
+@ContextConfiguration(classes = {AppConfig.class, UserController.class})
+@WebAppConfiguration
+class UserControllerTest {
 
     @Mock
     private UserService userService;
@@ -34,20 +39,17 @@ class UserControllerTest extends BaseTest {
     @InjectMocks
     private UserController userController;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     @DisplayName("View all users successfully")
     void testViewUsers() {
         List<User> users = new ArrayList<>();
-        User user1 = new User(
-                "testUser1",
-                "password1",
-                Role.ADMIN
-        );
-        User user2 = new User(
-                "testUser2",
-                "password2",
-                Role.CLIENT
-        );
+        User user1 = new User("testUser1", "password1", Role.ADMIN);
+        User user2 = new User("testUser2", "password2", Role.CLIENT);
         users.add(user1);
         users.add(user2);
 
@@ -64,11 +66,7 @@ class UserControllerTest extends BaseTest {
     @DisplayName("Get user by username - user found")
     void testGetUserByUsername_Found() {
         String username = "testUser1";
-        User user = new User(
-                username,
-                "password1",
-                Role.ADMIN
-        );
+        User user = new User(username, "password1", Role.ADMIN);
 
         when(userService.getUserByUsername(username)).thenReturn(user);
 

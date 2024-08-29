@@ -37,7 +37,7 @@ public class AuditAspect {
         Object result = joinPoint.proceed();
 
         long executionTime = System.nanoTime() - start;
-        log.info("{} executed in {} ms", joinPoint.getSignature(), executionTime);
+        log.info("{} executed in {} ms", joinPoint.getSignature(), executionTime / 1_000_000);
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Audit audit = signature.getMethod().getAnnotation(Audit.class);
@@ -49,7 +49,8 @@ public class AuditAspect {
         if (audit != null) {
             ActionType actionType = audit.actionType();
             Object[] args = joinPoint.getArgs();
-            loggerService.logAction("system", actionType, "Action performed with args: " + Arrays.toString(args));
+            loggerService.logAction("system", actionType,
+                    "Action performed with args: " + Arrays.toString(args));
         }
 
         return result;

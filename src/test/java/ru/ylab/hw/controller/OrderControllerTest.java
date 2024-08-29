@@ -1,14 +1,17 @@
 package ru.ylab.hw.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.ylab.hw.BaseTest;
-import org.mockito.Mock;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
+import ru.ylab.hw.config.AppConfig;
 import ru.ylab.hw.dto.OrderDTO;
 import ru.ylab.hw.entity.Order;
 import ru.ylab.hw.enums.OrderStatus;
@@ -22,8 +25,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class OrderControllerTest extends BaseTest {
+@SpringJUnitConfig
+@ContextConfiguration(classes = {AppConfig.class, OrderController.class})
+@WebAppConfiguration
+class OrderControllerTest {
 
     @Mock
     private OrderService orderService;
@@ -33,6 +38,11 @@ class OrderControllerTest extends BaseTest {
 
     @InjectMocks
     private OrderController orderController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     @DisplayName("Create order successfully")
