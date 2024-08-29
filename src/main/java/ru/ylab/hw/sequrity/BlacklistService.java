@@ -1,5 +1,7 @@
 package ru.ylab.hw.sequrity;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +10,7 @@ import java.util.Set;
  * invalidated before their natural expiration. By maintaining a blacklist, the application can
  * ensure that these tokens cannot be reused to access protected resources.
  */
+@Component
 public class BlacklistService {
 
     private final Set<String> blacklist = new HashSet<>();

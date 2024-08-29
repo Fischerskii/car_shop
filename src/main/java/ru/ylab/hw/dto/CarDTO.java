@@ -4,20 +4,20 @@ import lombok.Data;
 
 @Data
 public class CarDTO {
-    private String vin;
+    private String vinNumber;
     private String brand;
     private String model;
     private int year;
     private double price;
     private String condition;
 
-    public CarDTO(String vin, String brand, String model, int year, double price, String condition) {
-        validateVin(vin);
+    public CarDTO(String vinNumber, String brand, String model, int year, double price, String condition) {
+        validateVin(vinNumber);
         validateBrand(brand);
         validateModel(model);
         validateCondition(condition);
 
-        this.vin = vin;
+        this.vinNumber = vinNumber;
         this.brand = brand;
         this.model = model;
         this.year = year;

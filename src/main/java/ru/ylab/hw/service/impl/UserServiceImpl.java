@@ -1,6 +1,8 @@
 package ru.ylab.hw.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.ylab.hw.audit.Audit;
 import ru.ylab.hw.enums.ActionType;
 import ru.ylab.hw.enums.Role;
@@ -14,11 +16,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Service
 @Slf4j
 @Audit(actionType = ActionType.USER_ACTIONS)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

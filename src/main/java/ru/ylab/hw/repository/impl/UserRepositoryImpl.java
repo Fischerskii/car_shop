@@ -1,6 +1,7 @@
 package ru.ylab.hw.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.ylab.hw.config.DatabaseConfig;
 import ru.ylab.hw.entity.User;
 import ru.ylab.hw.enums.Role;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
@@ -20,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
         String query = "INSERT INTO entity_schema.user (username, password, role) " +
                 "VALUES (?, ?, ?)";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -45,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository {
                 "SET password = ?, role = ? " +
                 "WHERE username = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -69,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository {
         String query = "DELETE FROM entity_schema.user " +
                 "WHERE username = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -90,7 +92,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> getUserByUsername(String username) {
         String query = "SELECT * FROM entity_schema.user " +
                 "WHERE username = ?";
-        try (Connection connection = DatabaseConfig.getConnection();
+        try (Connection connection = new DatabaseConfig().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -114,7 +116,7 @@ public class UserRepositoryImpl implements UserRepository {
         String query = "SELECT * FROM entity_schema.user";
         List<User> users = new ArrayList<>();
 
-        try (Connection connection = DatabaseConfig.getConnection();
+        try (Connection connection = new DatabaseConfig().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {

@@ -1,4 +1,4 @@
-package ru.ylab.hw.audit;
+package ru.ylab.hw.service;
 
 import ru.ylab.hw.entity.LogEntry;
 import ru.ylab.hw.enums.ActionType;

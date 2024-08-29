@@ -1,4 +1,4 @@
-package ru.ylab.hw.service.impl;
+package ru.ylab.hw.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import ru.ylab.hw.entity.Order;
 import ru.ylab.hw.enums.OrderStatus;
 import ru.ylab.hw.repository.OrderRepository;
-import ru.ylab.hw.service.OrderService;
+import ru.ylab.hw.service.impl.OrderServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,7 +23,7 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @InjectMocks
-    private OrderService orderService;
+    private OrderServiceImpl orderService;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +33,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("Should create a new order successfully")
     void createOrder_ShouldCallSaveMethod() {
-        Order order = createTestOrder();
+        Order order = createTestOrder(UUID.randomUUID());
 
         orderService.createOrder(order);
 
@@ -55,7 +55,7 @@ class OrderServiceTest {
     @DisplayName("Should return order by ID if it exists")
     void getOrderById_ShouldReturnOrder_WhenExists() {
         UUID orderId = UUID.randomUUID();
-        Order order = createTestOrder();
+        Order order = createTestOrder(orderId);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
         Optional<Order> result = orderService.getOrderById(orderId);
@@ -78,7 +78,8 @@ class OrderServiceTest {
     @Test
     @DisplayName("Should return all orders from the repository")
     void getAllOrders_ShouldReturnAllOrders() {
-        List<Order> orders = Arrays.asList(createTestOrder(), createTestOrder());
+
+        List<Order> orders = Arrays.asList(createTestOrder(UUID.randomUUID()), createTestOrder(UUID.randomUUID()));
         when(orderRepository.findAll()).thenReturn(orders);
 
         List<Order> result = orderService.getAllOrders();
@@ -87,10 +88,10 @@ class OrderServiceTest {
         verify(orderRepository, times(1)).findAll();
     }
 
-    private Order createTestOrder() {
+    private Order createTestOrder(UUID orderId) {
         return Order.builder()
-                .id(UUID.randomUUID())
-                .userName("john_doe")
+                .id(orderId)
+                .username("username")
                 .carVinNumber("1HGCM82633A004352")
                 .status(OrderStatus.PENDING)
                 .orderCreationDate(LocalDateTime.now())

@@ -15,11 +15,13 @@ import java.util.Properties;
 @Testcontainers
 @ExtendWith(MockitoExtension.class)
 public abstract class BaseTest {
-
     private static final Properties properties = new Properties();
 
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer;
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine")
+            .withDatabaseName("db.name")
+            .withUsername("db.username")
+            .withPassword("db.password");
 
     @BeforeAll
     public static void setup() {
@@ -29,16 +31,10 @@ public abstract class BaseTest {
             ex.printStackTrace();
         }
 
-        postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine")
-                .withDatabaseName(properties.getProperty("db.name"))
-                .withUsername(properties.getProperty("db.username"))
-                .withPassword(properties.getProperty("db.password"))
-                .withEnv("POSTGRES_PASSWORD", "pass");
-
         postgreSQLContainer.start();
 
-        System.setProperty(properties.getProperty("db.url"), postgreSQLContainer.getJdbcUrl());
-        System.setProperty(properties.getProperty("db.username"), postgreSQLContainer.getUsername());
-        System.setProperty(properties.getProperty("db.password"), postgreSQLContainer.getPassword());
+        System.setProperty("db.url", postgreSQLContainer.getJdbcUrl());
+        System.setProperty("db.username", postgreSQLContainer.getUsername());
+        System.setProperty("db.password", postgreSQLContainer.getPassword());
     }
 }

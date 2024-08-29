@@ -98,7 +98,7 @@ public class OrderRepositoryTest extends BaseTest {
     private Order createTestOrder() {
         return Order.builder()
                 .id(UUID.randomUUID())
-                .userName("john_doe")
+                .username("john_doe")
                 .carVinNumber("1HGCM82633A004352")
                 .status(OrderStatus.PENDING)
                 .orderCreationDate(LocalDateTime.now())

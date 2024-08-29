@@ -1,6 +1,7 @@
 package ru.ylab.hw.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.ylab.hw.config.DatabaseConfig;
 import ru.ylab.hw.entity.Car;
 import ru.ylab.hw.exception.DataAccessException;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 @Slf4j
 public class CarRepositoryImpl implements CarRepository {
 
@@ -22,7 +24,7 @@ public class CarRepositoryImpl implements CarRepository {
                 "VALUES (?, ?, ?, ?, ?, ?) " +
                 "RETURNING car_vin_number";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -52,7 +54,7 @@ public class CarRepositoryImpl implements CarRepository {
                 "SET brand = ?, model = ?, year = ?, price = ?, condition = ? " +
                 "WHERE car_vin_number = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -81,7 +83,7 @@ public class CarRepositoryImpl implements CarRepository {
         String sql = "DELETE FROM entity_schema.car " +
                 "WHERE id = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection()) {
+        try (Connection connection = new DatabaseConfig().getConnection()) {
             connection.setAutoCommit(false);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -104,7 +106,7 @@ public class CarRepositoryImpl implements CarRepository {
         List<Car> cars = new ArrayList<>();
         String sql = "SELECT * FROM entity_schema.car";
 
-        try (Connection connection = DatabaseConfig.getConnection();
+        try (Connection connection = new DatabaseConfig().getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -130,7 +132,7 @@ public class CarRepositoryImpl implements CarRepository {
                 "FROM entity_schema.car " +
                 "WHERE car_vin_number = ?";
 
-        try (Connection connection = DatabaseConfig.getConnection();
+        try (Connection connection = new DatabaseConfig().getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, vinNumber);
