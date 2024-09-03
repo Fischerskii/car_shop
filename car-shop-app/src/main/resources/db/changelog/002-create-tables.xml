@@ -1,0 +1,60 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="002-create-tables" author="Pavel Trofimov">
+
+        <createTable schemaName="entity_schema" tableName="car">
+            <column name="id" type="INT" defaultValueComputed="nextval('entity_schema.car_id_seq')"/>
+            <column name="car_vin_number" type="VARCHAR(17)" autoIncrement="false">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="brand" type="VARCHAR(50)"/>
+            <column name="model" type="VARCHAR(50)"/>
+            <column name="year" type="INT"/>
+            <column name="price" type="DECIMAL(10,2)"/>
+            <column name="condition" type="VARCHAR(20)"/>
+        </createTable>
+
+        <createTable schemaName="entity_schema" tableName="user">
+            <column name="id" type="INT" defaultValueComputed="nextval('entity_schema.user_id_seq')"/>
+            <column name="username" type="VARCHAR(50)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="password" type="VARCHAR(100)"/>
+            <column name="role" type="VARCHAR(20)"/>
+        </createTable>
+
+        <createTable schemaName="entity_schema" tableName="order">
+            <column name="order_id_seq" type="INT" defaultValueComputed="nextval('entity_schema.order_id_seq')"/>
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false" foreignKeyName="fk_order_user" references="entity_schema.user(username)"/>
+            </column>
+            <column name="car_vin_number" type="VARCHAR(50)">
+                <constraints nullable="false" foreignKeyName="fk_order_car" references="entity_schema.car(car_vin_number)"/>
+            </column>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_creation_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable schemaName="service_schema" tableName="logs">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(50)"/>
+            <column name="action_type" type="VARCHAR(50)"/>
+            <column name="details" type="TEXT"/>
+            <column name="timestamp" type="TIMESTAMP"/>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>
