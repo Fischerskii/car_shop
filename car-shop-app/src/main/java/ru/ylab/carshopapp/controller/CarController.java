@@ -1,6 +1,8 @@
 package ru.ylab.carshopapp.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,11 @@ import ru.ylab.carshopapp.service.CarService;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cars")
+@Tag(name = "Cars", description = "Operations related to cars")
 public class CarController {
 
     private final CarService carService;
@@ -26,6 +30,7 @@ public class CarController {
             carService.addCar(carMapper.toEntity(carDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body("Car added successfully");
         } catch (IllegalArgumentException e) {
+            log.error("Error adding car", e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

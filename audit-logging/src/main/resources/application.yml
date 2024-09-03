@@ -8,4 +8,4 @@ spring:
     name: car_shop_db
     driver-class-name: org.postgresql.Driver
   liquibase:
-    change-log: classpath:db/changelog/changelog.ml
+    change-log: classpath:db/changelog/changelog.xml

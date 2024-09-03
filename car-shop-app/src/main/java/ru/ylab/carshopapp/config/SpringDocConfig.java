@@ -13,7 +13,7 @@ public class SpringDocConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("public")
-                .pathsToMatch("/**")
+                .pathsToMatch("/api/**")
                 .build();
     }
 

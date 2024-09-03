@@ -1,10 +1,11 @@
-package ru.ylab.auditlogging.repository;
+package ru.ylab.auditlogging.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.ylab.auditlogging.repository.LoggerRepository;
 import ru.ylab.common.entity.LogEntry;
 import ru.ylab.common.enums.ActionType;
 

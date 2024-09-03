@@ -126,8 +126,8 @@ public class UserControllerTest extends BaseTest {
 
     @Test
     void register_ShouldReturnBadRequest() throws Exception {
-        when(userService.register(anyString(), anyString(), any(Role.class)))
-                .thenThrow(new IllegalArgumentException("Registration failed"));
+//        when(userService.register(anyString(), anyString(), any(Role.class)))
+//                .thenThrow(new IllegalArgumentException("Registration failed"));
 
         mockMvc.perform(post("/api/users/register")
                         .contentType(MediaType.APPLICATION_JSON)

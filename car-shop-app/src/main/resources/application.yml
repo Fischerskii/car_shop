@@ -7,4 +7,9 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   liquibase:
-    change-log: classpath:db/changelog/changelog.ml
+    change-log: classpath:db/changelog/changelog.xml
+#
+#logging:
+#  level:
+#    root: DEBUG
+#    org.springframework: DEBUG

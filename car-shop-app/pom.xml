@@ -3,41 +3,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
-        <relativePath/>
+        <groupId>ru.ylab</groupId>
+        <artifactId>car-shop-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>ru.ylab</groupId>
+
     <artifactId>car-shop-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>car-shop-app</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <lombok.version>1.18.34</lombok.version>
-        <assertj.version>3.26.3</assertj.version>
-        <logback.version>1.5.7</logback.version>
-        <postgresql.version>42.7.3</postgresql.version>
         <mapstruct.version>1.6.0</mapstruct.version>
         <javax.version>4.0.1</javax.version>
-        <aspectj.version>1.9.22</aspectj.version>
         <jackson.version>2.17.2</jackson.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
-        <testcontainers.version>1.20.1</testcontainers.version>
         <springdoc.version>1.8.0</springdoc.version>
         <audit-logging.version>0.0.1-SNAPSHOT</audit-logging.version>
-        <car-shop-common.version>1.0-SNAPSHOT</car-shop-common.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -53,21 +40,15 @@
         </dependency>
 
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
         </dependency>
 
         <dependency>
@@ -202,5 +183,4 @@
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
-
 </project>
