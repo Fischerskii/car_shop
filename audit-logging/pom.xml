@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>audit-logging</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${audit-logging.version}</version>
     <name>audit-logging</name>
 
     <dependencies>

@@ -62,4 +62,4 @@ GET http://localhost:8080/car-shop/api/users/existing_user
 GET http://localhost:8080/car-shop/swagger-ui.html
 
 ### swagger index connect
-GET http://localhost:8080/car-shop/swagger-ui/index.html
+GET http://localhost:8080/swagger-ui/index.html

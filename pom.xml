@@ -18,8 +18,13 @@
         <aspectj.version>1.9.22</aspectj.version>
         <mapstruct.version>1.6.0</mapstruct.version>
         <springdoc-starter.version>2.6.0</springdoc-starter.version>
-        <car-shop-common.version>1.0-SNAPSHOT</car-shop-common.version>
+        <spring-context.version>6.1.1</spring-context.version>
         <testcontainers.version>1.20.1</testcontainers.version>
+        <jackson.version>2.15.3</jackson.version>
+
+        <car-shop-common.version>1.0-SNAPSHOT</car-shop-common.version>
+        <car-shop-app.version>0.0.1-SNAPSHOT</car-shop-app.version>
+        <audit-logging.version>0.0.1-SNAPSHOT</audit-logging.version>
     </properties>
 
     <dependencyManagement>
@@ -98,6 +103,18 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-context.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
